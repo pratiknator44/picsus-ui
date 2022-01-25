@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "Picsus",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}

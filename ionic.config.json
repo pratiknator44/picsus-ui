@@ -1,0 +1,7 @@
+{
+  "name": "Picsus",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

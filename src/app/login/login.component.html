@@ -1,0 +1,84 @@
+<div class="h-100 w-100" [ngClass]="{'bg-primary': mode === 1, 'bg-success': mode === 2}">
+
+  <div class="text-center text-bold mt-3">
+    <img src="../../assets/images/text-logo.png" />
+  </div>
+
+  <div class="bg-white rounded m-3" *ngIf="mode === 1">
+    <h1 class="text-center" color="grey">Login</h1>
+    <ion-item>
+      <ion-label position="floating">Email ID</ion-label>
+      <ion-input type="email" name="fieldName" ngDefaultControl [(ngModel)]="email"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating"name="fieldName">Password</ion-label>
+      <ion-input type="password" ngDefaultControl [(ngModel)]="password"></ion-input>
+    </ion-item>
+
+    <div class="text-right">
+      <a style="font-size: 0.75rem;" class="m-2">Forgot Password</a>
+    </div>
+    <div class="text-center text-danger">{{error}}</div>
+    <div class="text-center mt-1">
+      <ion-button (click)="submit()">Login</ion-button>
+    </div>
+
+    <div class="text-center">
+      <a style="font-size: 0.75rem;" class="m-2">Terms and Conditions</a>
+    </div>
+  </div>
+
+  <div class="bg-white rounded m-3" *ngIf="mode === 2">
+    <h1 class="text-center" color="grey">Hey There!</h1>
+    <ion-item>
+      <ion-label position="floating">Email ID</ion-label>
+      <ion-input type="email" name="fieldName" ngDefaultControl [(ngModel)]="email"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Password</ion-label>
+      <ion-input type="password" name="fieldName" ngDefaultControl [(ngModel)]="password"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating" name="fieldName">Confirm Password</ion-label>
+      <ion-input type="password" ngDefaultControl [(ngModel)]="confirmPassword"></ion-input>
+    </ion-item>
+    <div class="text-center text-danger">{{error}}</div>
+
+    <div class="text-small m-2">
+      By signing up you confirm and agree with the
+      <a>Terms and Conditions</a> of this service
+    </div>
+    <div class="text-center mt-1">
+      <ion-button color="success" (click)="submit()">Sign Up</ion-button>
+    </div>
+
+    <div class="text-center">
+      <a style="font-size: 0.75rem;" class="m-2">Terms and Conditions</a>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+  <div class="m-3 text-center" *ngIf="mode===1">
+    <ion-label class="text-white">New User?</ion-label><br>
+    <ion-button color="success" (click)="mode = 2">SignUp</ion-button>
+  </div>
+
+  <div class="m-3 text-center" *ngIf="mode===2">
+    <ion-label class="text-white">Existing User?</ion-label><br>
+    <ion-button color="primary" (click)="mode = 1">Login</ion-button>
+  </div>
+
+  <div class="text-center text-white text-bold">
+    BitA Studio
+  </div>
+
+</div>

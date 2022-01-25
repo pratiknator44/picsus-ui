@@ -1,0 +1,48 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <a class="text-white" [routerLink]="'/login'">
+        <ion-button>
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </ion-button>
+      </a>
+
+    </ion-buttons>
+    <ion-title>
+      Confirm mail ID
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+
+<ion-content [fullscreen]="true">
+
+  <div class="m-3">
+    Please confirm the OTP sent on your email <span style="font-weight: 700;">{{email}}</span>
+    <ion-item>
+      <ion-label position="floating">OTP</ion-label>
+      <ion-input type="text" [maxlength]="40" [(ngModel)]="otp"></ion-input>
+    </ion-item>
+
+    <div class="text-center">
+      <ion-button (click)="submitOTP()" shape="round" *ngIf="flags.showSubmit">Submit</ion-button><br><br>
+
+      <div *ngIf="flags.showLoading">
+        <ion-spinner></ion-spinner><br>
+        {{notice}}
+      </div>
+      <ion-label color="danger">{{otpError}}</ion-label><br>
+      <hr>
+      Change email<br>
+      <a routerLink="/login">
+        <ion-button size="small" color="dark" shape="round">
+          <ion-icon name="arrow-back"></ion-icon>
+        </ion-button>
+      </a>
+
+      <br>
+
+    </div>
+  </div>
+</ion-content>

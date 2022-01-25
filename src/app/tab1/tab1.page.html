@@ -1,0 +1,64 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>
+      Profile
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Me</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="m-2">
+    <div class="m-3 position-relative">
+      <div class="circle overflow-hidden" style="width: 10rem; height: 10rem; margin-left: auto; margin-right: auto;">
+        <img class="h-100 w-100"
+          src="https://www.pixelstalk.net/wp-content/uploads/images1/Lake-dock-sunrise-wallpaper.jpg" />
+      </div>
+      <div style="height: 2rem; width: 2rem; left: calc(65% - 1rem); top: calc(100% - 2rem);"
+        class="bg-primary circle text-white position-absolute">
+        <ion-icon name="pencil-outline" style="margin:0.5rem;">
+        </ion-icon>
+      </div>
+    </div>
+
+    <ion-list>
+      <ion-label color="dark-tint" position="stacked">Name</ion-label>
+      <h2 class="p-0 m-0">{{ user?.fname+' '+user?.lname }} <ion-icon name="pencil-outline" (click)="modelOpen=true"></ion-icon></h2>
+    </ion-list>
+
+    <ion-list>
+      <ion-label color="dark-tint" position="stacked">Account Details</ion-label>
+      <h5 class="p-0 m-0">Premium</h5>
+    </ion-list>
+
+    <div class="text-center mt-3">
+      <ion-button color="danger">Log Out</ion-button>
+    </div>
+  </div>
+
+
+  <!-- change name -->
+  <ion-modal
+  [isOpen]="modelOpen"
+  [breakpoints]="[0.25, 0.5, 1]"
+  [initialBreakpoint]="0.25"
+>
+  <ng-template>
+    <ion-content>
+      <div class="m-2">
+        <ion-item>
+          <ion-label color="dark" position="stacked">Enter your name</ion-label>
+          <ion-input type="text" [autofocus]="true" [value]="user?.fname+' '+user?.lname"></ion-input>
+        </ion-item>
+        <ion-button class="float-right">Save</ion-button>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+<!-- change name ends -->
+</ion-content>
