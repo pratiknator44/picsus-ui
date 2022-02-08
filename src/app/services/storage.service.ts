@@ -6,11 +6,8 @@ export class StorageService {
 
   user;
   constructor() {
-    this.user = {
-      fname:'Pratik',
-      lname: 'Agarwal',
-      dp: ''
-    }
+    this.user = JSON.parse(localStorage.getItem('user'));
+
   }
 
   saveUser(user) {

@@ -1,0 +1,18 @@
+<div class="progress-container circle position-relative overflow-hidden">
+  <div class="progress position-absolute w-100" [ngStyle]="{'height': percent+'%'}" >
+
+    <div style="color: yellow; font-size: 2rem;" class="text-center position-relative">
+
+      <div style="height: 2rem; width: 2rem;" class="position-absolute" #fish>
+        <ion-icon name="fish"></ion-icon>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="position-absolute text-center w-100 h-100" style="font-size: 3rem; color: white; top: calc(50% - 1.5rem);">
+    {{percent |  number: '1.0-0'}}%
+    <h6 class="m-0 p-0" *ngIf="label">{{label}}</h6>
+  </div>
+
+</div>

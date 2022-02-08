@@ -1,0 +1,27 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>
+      New Profile Picture
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<input type="file" class="d-none" (change)="fileChangeEvent($event)" #dpFile />
+<div>
+  <div *ngIf="!croppedImage" class="text-center" style="color: #CCC; font-size: 5rem;"><br>
+    <ion-icon name="image"></ion-icon>
+    <h4>Upload</h4>
+  </div>
+  <image-cropper class="h-100 w-100" [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true"
+    [aspectRatio]="1" [resizeToWidth]="200" [format]="['jpg', 'jpeg']" (imageCropped)="imageCropped($event)"
+    (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"></image-cropper>
+</div>
+<div class="text-center" *ngIf="croppedImage">
+  <ion-button color="success" (click)="cropAndUpload()">Crop and Upload</ion-button>
+</div>
+<img [src]="croppedImage" class="d-none" />
+
+<div class="text-center">
+  <ion-button color="primary" (click)="dpFile.click()">Browse</ion-button>
+</div>

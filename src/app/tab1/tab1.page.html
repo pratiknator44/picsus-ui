@@ -17,28 +17,40 @@
     <div class="m-3 position-relative">
       <div class="circle overflow-hidden" style="width: 10rem; height: 10rem; margin-left: auto; margin-right: auto;">
         <img class="h-100 w-100"
-          src="https://www.pixelstalk.net/wp-content/uploads/images1/Lake-dock-sunrise-wallpaper.jpg" />
+          [src]="dpSrc" />
       </div>
       <div style="height: 2rem; width: 2rem; left: calc(65% - 1rem); top: calc(100% - 2rem);"
         class="bg-primary circle text-white position-absolute">
-        <ion-icon name="pencil-outline" style="margin:0.5rem;">
-        </ion-icon>
+        <a routerLink="/tabs/dp">
+          <ion-icon name="pencil-outline" style="margin:0.5rem;">
+          </ion-icon>
+        </a>
+
       </div>
     </div>
 
     <ion-list>
       <ion-label color="dark-tint" position="stacked">Name</ion-label>
-      <h2 class="p-0 m-0">{{ user?.fname+' '+user?.lname }} <ion-icon name="pencil-outline" (click)="modelOpen=true"></ion-icon></h2>
+      <h2 class="p-0 m-0">
+        <span *ngIf="user?.fname">{{ user?.fname+' '+user?.lname }}</span>
+        <span *ngIf="!user?.fname" class="text-secondary" (click)="modelOpen=true">[No Name]</span>
+        <ion-icon name="pencil-outline" (click)="modelOpen=true"></ion-icon></h2>
     </ion-list>
 
     <ion-list>
       <ion-label color="dark-tint" position="stacked">Account Details</ion-label>
-      <h5 class="p-0 m-0">Premium</h5>
+      <h5 class="p-0 m-0">{{user?.accountType | acType }}</h5>
     </ion-list>
 
-    <div class="text-center mt-3">
-      <ion-button color="danger">Log Out</ion-button>
+    <div class="center">
+      <pi-circular-progress [value]="0.24"></pi-circular-progress>
     </div>
+    <div class="text-center mt-3">
+      <ion-button color="primary">Change Plan</ion-button>
+    </div>
+    <!-- <div class="text-center mt-3">
+      <ion-button color="danger">Log Out</ion-button>
+    </div> -->
   </div>
 
 
@@ -51,11 +63,26 @@
   <ng-template>
     <ion-content>
       <div class="m-2">
-        <ion-item>
-          <ion-label color="dark" position="stacked">Enter your name</ion-label>
-          <ion-input type="text" [autofocus]="true" [value]="user?.fname+' '+user?.lname"></ion-input>
-        </ion-item>
-        <ion-button class="float-right">Save</ion-button>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <ion-item>
+                <ion-label color="dark" position="stacked">First Name</ion-label>
+                <ion-input type="text" class="w-50" #fname [autofocus]="true" [value]="user?.fname ?? ''"></ion-input>
+              </ion-item>
+            </ion-col>
+
+            <ion-col size="6">
+              <ion-item>
+                <ion-label color="dark" position="stacked">Last Name</ion-label>
+                <ion-input type="text" class="w-50" #lname [autofocus]="true" [value]="user?.lname ?? ''"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+
+        <ion-button class="float-right" (click)="saveName(fname.value, lname.value)">Save</ion-button>
       </div>
     </ion-content>
   </ng-template>

@@ -6,14 +6,17 @@ import { FormsModule } from '@angular/forms';
 import { TabsPageRoutingModule } from './tabs-routing.module';
 
 import { TabsPage } from './tabs.page';
+import { DpComponent } from '../dp/dp.component';
+import { ImageCropperModule } from 'ngx-image-cropper';
 
 @NgModule({
   imports: [
     IonicModule,
     CommonModule,
     FormsModule,
-    TabsPageRoutingModule
+    TabsPageRoutingModule,
+    ImageCropperModule,
   ],
-  declarations: [TabsPage]
+  declarations: [TabsPage, DpComponent]
 })
 export class TabsPageModule {}

@@ -1,0 +1,20 @@
+.progress-container {
+  height: 15rem;
+  background-color: rgb(220, 232, 255);
+  width: 15rem;
+}
+
+.progress {
+  background-color: #06F;
+  bottom: 0; left:0
+}
+
+
+@keyframes animate-fish {
+  0% {
+    margin-left: 25%;
+  }
+  100% {
+    margin-left: 100%;
+  }
+}

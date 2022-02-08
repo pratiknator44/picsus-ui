@@ -11,6 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { OtpComponent } from './otp/otp.component';
+import { PipesModule } from './pipes/pipes.module';
 import { APIService } from './services/api.service';
 import { CredentailService } from './services/credential.service';
 import { TokenInterceptor } from './services/interceptors';
@@ -27,7 +28,7 @@ import { StorageService } from './services/storage.service';
     AppRoutingModule,
     CommonModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
   ],
   providers: [
     LoggedInGuardService,

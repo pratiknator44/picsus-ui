@@ -15,7 +15,7 @@ export class LoginComponent {
 
   mode: 1 | 2 = 1;    // 1 = login, 2 = sign up
   email = ''; password = ''; confirmPassword = '';
-  loader; error;
+  loader; error='432';
   constructor(
     private _apiService: APIService,
     private _storageService: StorageService,
@@ -46,12 +46,13 @@ export class LoginComponent {
     // login
     else if(this.mode === 1) {
       this._apiService.login(this.email, this.password).then(res => {
+        this.error = new Date().getTime()+JSON.stringify(res);
         if(res['success']) {
           this._storageService.saveTokenAndUser(res['token'], JSON.stringify(res['user']));
           this._router.navigate(['']);
         }
       }).catch(err => {
-        this.error = err['error']['message'];
+        this.error = "error "+JSON.stringify(err);
         console.log(err);
       });
     }
