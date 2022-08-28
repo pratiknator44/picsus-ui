@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DpComponent } from '../dp/dp.component';
+import { FullImageComponent } from '../full-image/full-image.container';
+import { SettingMenuComponent } from '../settings/settings.component';
+import { UploadComponent } from '../upload/upload.component';
 import { TabsPage } from './tabs.page';
 
 const routes: Routes = [
@@ -25,6 +28,17 @@ const routes: Routes = [
         component: DpComponent
       },
       {
+        path: 'settings',
+        component: SettingMenuComponent
+      },
+      {
+        path: 'image-info',
+        loadChildren: () => import('../full-image/full-image.module').then(m => m.FullImageModule),
+      },{
+        path: 'upload',
+        component: UploadComponent  
+      },
+      {
         path: '',
         redirectTo: '/tabs/tab2',
         pathMatch: 'full'
@@ -41,4 +55,4 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
 })
-export class TabsPageRoutingModule {}
+export class TabsPageRoutingModule { }

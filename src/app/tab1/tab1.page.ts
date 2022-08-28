@@ -13,7 +13,6 @@ import { StorageService } from '../services/storage.service';
 export class Tab1Page implements OnInit {
 
   user;
-  modelOpen = false;
   dpSrc: String;
   constructor(private _storageService: StorageService,
     private _activeRoute: ActivatedRoute,
@@ -31,6 +30,7 @@ export class Tab1Page implements OnInit {
         this.refreshUserData();
       } else {
         this.user = this._storageService.user;
+        console.log(APIvars.domain+'/'+this.user['dp']);
         this.dpSrc = APIvars.domain+'/'+this.user['dp'];
       }
     });
@@ -47,7 +47,6 @@ export class Tab1Page implements OnInit {
   saveName(fname, lname) {
     this._apiService.setName(fname, lname).then(res => {
       if(res['success']) {
-        this.modelOpen = false;
         this.refreshUserData();
         // this._router.navigate(['/tabs/tab1'], { queryParams: { refresh: 'all'} });
       } else {

@@ -37,6 +37,10 @@
 .text-white {
   color: white !important;
 }
+
+.text-primary {
+  color: #3880ff !important;
+}
 .circle {
   border-radius: 50% !important;
 }
@@ -99,4 +103,20 @@
 }
 .d-block {
   display: block;
+}
+.d-flex {
+  display: flex;
+}
+.flex-wrap {
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.ripple-parent {
+  position: relative;
+  overflow: hidden;
+}
+
+.text-secondary {
+  color: #666;
 }

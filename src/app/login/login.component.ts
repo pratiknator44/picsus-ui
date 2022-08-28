@@ -15,7 +15,7 @@ export class LoginComponent {
 
   mode: 1 | 2 = 1;    // 1 = login, 2 = sign up
   email = ''; password = ''; confirmPassword = '';
-  loader; error='432';
+  loader; error='';
   constructor(
     private _apiService: APIService,
     private _storageService: StorageService,

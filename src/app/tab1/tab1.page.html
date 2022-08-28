@@ -9,7 +9,7 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Me</ion-title>
+      <ion-title size="large">{{ user?.fname }}</ion-title>
     </ion-toolbar>
   </ion-header>
 
@@ -33,12 +33,12 @@
       <ion-label color="dark-tint" position="stacked">Name</ion-label>
       <h2 class="p-0 m-0">
         <span *ngIf="user?.fname">{{ user?.fname+' '+user?.lname }}</span>
-        <span *ngIf="!user?.fname" class="text-secondary" (click)="modelOpen=true">[No Name]</span>
-        <ion-icon name="pencil-outline" (click)="modelOpen=true"></ion-icon></h2>
+        <span *ngIf="!user?.fname" class="text-secondary" id="open-edit-modal">[No Name]</span>
+        <ion-icon name="pencil-outline" id="open-edit-modal"></ion-icon></h2>
     </ion-list>
 
     <ion-list>
-      <ion-label color="dark-tint" position="stacked">Account Details</ion-label>
+      <ion-label color="dark-tint" position="stacked">Your Account</ion-label>
       <h5 class="p-0 m-0">{{user?.accountType | acType }}</h5>
     </ion-list>
 
@@ -46,7 +46,7 @@
       <pi-circular-progress [value]="0.24"></pi-circular-progress>
     </div>
     <div class="text-center mt-3">
-      <ion-button color="primary">Change Plan</ion-button>
+      <ion-button color="primary">Diagnose Droid</ion-button>
     </div>
     <!-- <div class="text-center mt-3">
       <ion-button color="danger">Log Out</ion-button>
@@ -56,7 +56,7 @@
 
   <!-- change name -->
   <ion-modal
-  [isOpen]="modelOpen"
+  trigger="open-edit-modal"
   [breakpoints]="[0.25, 0.5, 1]"
   [initialBreakpoint]="0.25"
 >
