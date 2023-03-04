@@ -8,6 +8,8 @@ import { TabsPageRoutingModule } from './tabs-routing.module';
 import { TabsPage } from './tabs.page';
 import { DpComponent } from '../dp/dp.component';
 import { ImageCropperModule } from 'ngx-image-cropper';
+import { SettingMenuComponent } from '../settings/settings.component';
+import { FullImageModule } from '../full-image/full-image.module';
 
 @NgModule({
   imports: [
@@ -17,6 +19,6 @@ import { ImageCropperModule } from 'ngx-image-cropper';
     TabsPageRoutingModule,
     ImageCropperModule,
   ],
-  declarations: [TabsPage, DpComponent]
+  declarations: [TabsPage, DpComponent, SettingMenuComponent],
 })
 export class TabsPageModule {}

@@ -1,0 +1,33 @@
+.image-container {
+}
+
+.toolbar {
+    background-color: white;
+    border-radius: 5px;
+    width: calc(100vw - 5vw);
+    bottom: 1rem;
+    height: 4rem;
+    left: 2.5vw;
+    cursor: pointer;
+}
+
+.toolbar>div {
+    height: 100%;
+    border-radius: 1px black;
+    font-size: 2rem;
+    width: 33%;
+}
+
+.toolbar>div>ion-icon {
+    margin-top: 1rem;
+    color: #666
+}
+
+.modal-close {
+    background-color: white !important;
+}
+
+.modal-close-position {
+    bottom: 2rem;
+    left: 50%;
+}
