@@ -1,0 +1,30 @@
+.tile-container {
+    background-color: steelblue;
+    height: 6rem;
+    width: calc(100% - 1rem);
+    border-radius: 0.5rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0.25rem;
+    display: flex;
+}
+
+.heading {
+    color: white;
+    padding: 1rem;
+    padding-bottom: 0;
+    font-size: 1.5rem;
+}
+
+.space-left {
+    color: white;
+    padding: 1rem;
+    padding-top: 0;
+    margin: 0;
+    font-size: 0.75rem;
+}
+
+.tile-container > div:first-child {
+    width: 75%;
+    background-color: aqua;
+}

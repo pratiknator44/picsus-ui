@@ -7,5 +7,7 @@ export enum APIvars {
   user_login = 'users/login',
   user_uploadDp = 'users/uploaddp',
   user_info = 'users/info',
-  user_changeName = 'users/changeName'
+  user_changeName = 'users/changeName',
+  create_album = 'media/createAlbum',
+  get_albums = 'media/getAlbums'
 }

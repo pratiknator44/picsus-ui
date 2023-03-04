@@ -25,6 +25,10 @@ const routes: Routes = [
         component: DpComponent
       },
       {
+        path: 'new-gallery',
+        loadChildren: () => import('../new-gallery-wizard/new-gallery-wizard.module').then(m => m.NewGalleryWizardModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/tab2',
         pathMatch: 'full'
