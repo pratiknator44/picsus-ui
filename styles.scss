@@ -37,6 +37,10 @@
 .text-white {
   color: white !important;
 }
+
+.text-primary {
+  color: #3880ff !important;
+}
 .circle {
   border-radius: 50% !important;
 }
@@ -99,4 +103,11 @@
 }
 .d-block {
   display: block;
+}
+
+.ripple-parent {
+  position: relative;
+  overflow: hidden;
+
+  border: 1px solid #ddd;
 }

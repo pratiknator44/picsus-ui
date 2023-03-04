@@ -9,9 +9,27 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 3</ion-title>
+      <ion-title size="large">Albums</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+  <ion-fab id="open-new-lib-modal" slot="fixed" vertical="top" horizontal="end" [edge]="true" (click)="routeToNewGalleryWizard()">
+      <ion-fab-button>
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+  </ion-fab>
+  <!-- <ion-list>
+    <ion-item *ngFor="let library of libraries" class="ion-activatable ripple-parent ">
+      <ion-ripple-effect></ion-ripple-effect>
+      <ion-avatar slot="start">
+        <img [src]="'https://cdn-icons-png.flaticon.com/512/16/16453.png'" alt="avatar" />
+      </ion-avatar>
+      <ion-label>{{ library?.name }} <span class="text-grey">[18MB / 5GB]</span></ion-label>
+    </ion-item>
+  </ion-list> -->
+  {{ albums | json }}
+  <ion-label *ngIf="albums?.length === 0">No Albums found</ion-label>
+  <pi-album-tile *ngFor="let album of albums" [albumData]="album"></pi-album-tile>
+
+
 </ion-content>

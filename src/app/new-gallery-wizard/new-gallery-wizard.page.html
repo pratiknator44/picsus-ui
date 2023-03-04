@@ -1,0 +1,68 @@
+<ng-container *ngTemplateOutlet="creationRes ? creationResult : createGallery"></ng-container>
+<ng-template #createGallery>
+  <ion-header [translucent]="true">
+    <ion-toolbar color="primary">
+      <ion-title>
+        Create New Gallery
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content [fullscreen]="true">
+    <ion-header collapse="condense">
+      <ion-toolbar>
+        <ion-title size="large">
+          <a href="#/tabs/tab3"><ion-icon name="arrow-back-outline" size="medium"></ion-icon></a>
+          Create New Gallery</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <form [formGroup]="newGalleryForm">
+      <ion-item>
+        <ion-label position="floating">Event Name</ion-label>
+        <ion-input placeholder="Enter text"></ion-input>
+      </ion-item>
+
+
+      <ion-item>
+        <ion-label position="floating">Description</ion-label>
+        <ion-textarea placeholder="Enter description" ></ion-textarea>
+      </ion-item>
+      
+
+      <ion-item>
+        <ion-label position="stacked">Number of days</ion-label>
+        <ion-input type="number" min="1" value="1" ></ion-input>
+      </ion-item>
+
+      <!-- <div class="m-3">
+        You get 100 MB free for 2 days on creating a new Gallery, you can add member and extent the storage and days
+      </div> -->
+
+
+      <ion-item class="mt-3">
+        <ion-checkbox slot="start"></ion-checkbox>
+        <label>Closed Gallery <br> <span class="text-small">(Admin permission required to join)</span></label>
+      </ion-item>
+
+
+      <div class="text-center mt-3">
+        <ion-button class="w-50" (click)="createAlbum()">Create Gallery</ion-button>
+      </div>
+    </form>
+  </ion-content>
+</ng-template>
+
+<ng-template #creationResult>
+
+  <ion-content [fullscreen]="true">
+
+
+    <app-explore-container>
+      Yeyy! Gallery creation success
+      <br>
+      {{creationRes | json}}
+      <br>
+      <ion-button>Explore Gallery</ion-button>
+    </app-explore-container>
+  </ion-content>
+</ng-template>
