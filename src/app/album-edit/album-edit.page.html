@@ -1,0 +1,73 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>
+      Gallery Info/Edit
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-progress-bar type="indeterminate" *ngIf="this.isInfoLoading"></ion-progress-bar>
+
+  <div class="stats text-center w-100">
+
+    <div>
+      <div>
+        <ion-label position="stacked">Created by</ion-label>
+        <h2>{{creator?.fname + ' ' + creator?.lname}}</h2>
+      </div>
+
+      <div>
+        <ion-label position="stacked">On</ion-label>
+        <h2>{{ album?.createdDate | date: 'MMM dd, yyyy'}}</h2>
+      </div>
+    </div>
+    <div>
+      <div class="d-flex w-100">
+        <ion-button (click)="routeToAlbumContent()">
+          <ion-label position="stacked">Photos</ion-label>
+          <h2>{{ totals?.media }}</h2>
+        </ion-button>
+        <ion-button>
+          <ion-label position="stacked">Contributors</ion-label>
+          <h2>{{ totals?.contributors }}</h2>
+        </ion-button>
+      </div>
+    </div>
+  </div>
+
+
+  <form [formGroup]="albumForm" (ngSubmit)="updateAlbum()">
+    <ion-item>
+      <ion-label position="stacked">Album Name</ion-label>
+      <ion-input placeholder="Album name" formControlName="name" [readonly]="isUpdatingInfo"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Description</ion-label>
+      <ion-textarea placeholder="Album name" formControlName="description" [readonly]="isUpdatingInfo"></ion-textarea>
+    </ion-item>
+
+    <div class="text-center">
+      <ion-button type="submit" class="mt-3 submit-button">Update
+        <span *ngIf="isUpdatingInfo"> &nbsp;<ion-spinner></ion-spinner></span></ion-button>
+    </div>
+  </form>
+
+
+  <div class="m-1">
+    <h3>People in this gallery</h3>
+    <ion-item *ngFor="let user of contributors">
+      <ion-avatar slot="start">
+        <img [alt]="" src="{{'dp/'+user?.dp | addDomain}}" />
+      </ion-avatar>
+      <ion-label>
+        {{user?.fname + ' ' + user?.lname}}
+      </ion-label>
+    </ion-item>
+  </div>
+
+
+
+
+</ion-content>

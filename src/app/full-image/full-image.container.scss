@@ -1,8 +1,14 @@
 .image-container {
+    background-color: #111;
+    display: flex;
+}
+
+.image-container > img {
+    align-self: center;
 }
 
 .toolbar {
-    background-color: white;
+    background: rgba($color: #FFF, $alpha: 0.7);
     border-radius: 5px;
     width: calc(100vw - 5vw);
     bottom: 1rem;
@@ -11,14 +17,14 @@
     cursor: pointer;
 }
 
-.toolbar>div {
+.toolbar>div > div {
     height: 100%;
     border-radius: 1px black;
     font-size: 2rem;
     width: 33%;
 }
 
-.toolbar>div>ion-icon {
+.toolbar>div> div >ion-icon {
     margin-top: 1rem;
     color: #666
 }
@@ -30,4 +36,8 @@
 .modal-close-position {
     bottom: 2rem;
     left: 50%;
+}
+
+.ripple-parent {
+    border-color: transparent;
 }

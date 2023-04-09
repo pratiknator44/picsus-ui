@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { APIvars } from "../enums/apivars.enum";
+import { take } from "rxjs/operators";
 
 @Injectable()   // injected in root
 export class APIService {
@@ -44,6 +45,35 @@ export class APIService {
 
   getAlbum() {
     return this._http.get(this.domain + APIvars.get_albums).toPromise();
+  }
+
+  getAlbumDetails(albumId) {
+    const params = new HttpParams().set('albumId', albumId);
+    return this._http.get(this.domain + APIvars.get_album_details, {params}).toPromise();
+  }
+
+  getAlbumContents(albumId) {
+    return this._http.post(this.domain + APIvars.get_album_contents, {albumId}).toPromise();
+  }
+
+  saveSingleImage(albumId: string, mediaFile: File) {
+    const formData = new FormData();
+    formData.append('file', mediaFile);
+    formData.append('albumId', albumId);
+    formData.append('defyThumbnail', 'true');
+    return this._http.post(APIvars.domain+APIvars.save_image, formData);
+  }
+
+  deleteAlbum(albumId) {
+    return this._http.post(this.domain+APIvars.delete_album, {albumId}).pipe(take(1));
+  }
+
+  getAlbumInfo(albumId) {
+    return this._http.post(this.domain+APIvars.get_album_info, {albumId}).pipe(take(1));
+  }
+
+  updateAlbumInfo(albumId, name: string, description: string) {
+    return this._http.post(this.domain + APIvars.update_album_info, {albumId, edit: {name, description}}).pipe(take(1));
   }
 
 }

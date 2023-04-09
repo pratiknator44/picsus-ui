@@ -12,4 +12,4 @@ import { UploadComponent } from "./upload.component";
     exports: [UploadComponent],
     declarations: [UploadComponent],
 })
-export class FullImageModule {}
+export class UploadModule {}

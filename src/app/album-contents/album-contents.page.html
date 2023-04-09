@@ -1,0 +1,50 @@
+<ng-template #albumContentTemplate>
+  <ion-header [translucent]="true">
+    <ion-toolbar color="primary">
+      <ion-title>
+        {{album?.name || 'Album id not found'}}
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content [fullscreen]="true">
+    <ion-fab slot="fixed" vertical="top" horizontal="end" [edge]="true">
+      <ion-fab-button (click)="routeToUploadByAlbum()">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+    <!-- dp and album name and details-->
+
+    <div class="album-info-container">
+      <div class="dp-container w-25 m-2">
+        <img src="" class="circle" />
+      </div>
+
+      <div class="album-info" (click)="routeToInfo()">
+        <h2>{{album?.name}}</h2>
+        <div>{{album?.media?.length}} Photos | {{album?.contributors?.length}} contributors</div>
+        <div class="">Created on {{album?.createdDate | date: 'MMM dd, yyyy'}}</div>
+        <ion-button size="small" (click)="routeToInfo()">Gallery Info</ion-button>
+      </div>
+    </div>
+    <div class="album-photos-container">
+      <ion-label *ngIf="images?.length === 0">This album is empty</ion-label>
+      <div class="photo-tile" (click)="selectedImage = i; showFullImage(image)"
+        *ngFor="let image of images; let i = index" [ngClass]="{'selected-image': selectedImage === i}">
+        <img class="w-100 h-100" [src]="('media/_'+image) | addDomain" alt="no preview" />
+      </div>
+    </div>
+
+    <!-- <ion-modal [isOpen]="isModalOpen">
+      hello there!
+      <ion-router-outlet></ion-router-outlet>
+      
+    </ion-modal> -->
+  </ion-content>
+</ng-template>
+
+<ng-template #showImageTemplate>
+  <pi-full-image></pi-full-image>
+</ng-template>
+
+<ng-container [ngTemplateOutlet]="showImageMode? showImageTemplate : albumContentTemplate"></ng-container>

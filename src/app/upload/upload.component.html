@@ -1,9 +1,20 @@
-<ion-content>
-    <button class="start-button circle text-white ion-activatable ripple-parent" #startButton>
-        <h3 class="w-100">START</h3>
-        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
-    </button>
-    <h5 class="text-secondary">Press START</h5>
-    Discovered <span class="text-primary">21 GB</span>
-    <h5 class="">status: ready</h5>
+<ion-header [translucent]="true">
+    <ion-toolbar color="primary">
+        <ion-title>
+            Upload Component
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    Uploading in album id {{album}}<br>
+    <ion-button (click)="imageFilesInput.click()">Select Images</ion-button>
+    <ion-button (click)="uploadImageToServer()">Start upload</ion-button>
+    <input type="file" multiple accept="image/png, image/jpeg, image/jpg, image/webp" class="d-none"
+        (change)="filesSelected($event)" #imageFilesInput>
+
+    <br>
+    <span *ngIf="selectedImagesSrc?.length === 0">No file selected yet</span>
+    <br>
+    <img [src]="src" style="max-width: 4rem; max-height: 4rem;" *ngFor="let src of selectedImagesSrc" />
 </ion-content>

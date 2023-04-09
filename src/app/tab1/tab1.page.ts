@@ -31,7 +31,7 @@ export class Tab1Page implements OnInit {
       } else {
         this.user = this._storageService.user;
         console.log(APIvars.domain+'/'+this.user['dp']);
-        this.dpSrc = APIvars.domain+'/'+this.user['dp'];
+        this.dpSrc = APIvars.domain+'/dp/'+this.user['dp'];
       }
     });
   }
@@ -40,7 +40,7 @@ export class Tab1Page implements OnInit {
     this._apiService.getUserInfoFromToken().then(res => {
       this.user = res['user'];
       this._storageService.saveUser(JSON.stringify(this.user));
-      this.dpSrc = APIvars.domain+'/'+this.user['dp'];
+      this.dpSrc = APIvars.domain+'/dp/'+this.user['dp'];
     });
   }
 

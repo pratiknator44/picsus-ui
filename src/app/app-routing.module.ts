@@ -5,7 +5,6 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { OtpComponent } from './otp/otp.component';
 import { LoggedInGuardService } from './services/loggedIn.service';
 import { TabsPage } from './tabs/tabs.page';
-import { UploadComponent } from './upload/upload.component';
 
 const routes: Routes = [
   {

@@ -1,22 +1,23 @@
-<div class="image-container w-100 h-100 position-relative">
-    <img src="" class="w-100" />
+<div class="image-container w-100 position-relative" style="height: 92vh;">
+    <img [src]="('media/'+photoId) | addDomain" class="w-100" (load)="imageLoaded = true" />
 
-    <div class="toolbar position-absolute d-flex flex-wrap">
-        <ion-progress-bar type="indeterminate" *ngIf="imageLoaded"></ion-progress-bar>
+    <div class="toolbar position-absolute">
+        <ion-progress-bar type="indeterminate" *ngIf="!imageLoaded"></ion-progress-bar>
+        <div class="d-flex flex-wrap h-100">
+            <div class="ion-activatable ripple-parent text-center" id="open-modal" (click)="getInfo('myImageID')">
+                <ion-icon name="information-circle"></ion-icon>
+                <ion-ripple-effect></ion-ripple-effect>
+            </div>
 
-        <div class="ion-activatable ripple-parent text-center" id="open-modal" (click)="getInfo('myImageID')">
-            <ion-icon name="information-circle"></ion-icon>
-            <ion-ripple-effect></ion-ripple-effect>
-        </div>
+            <div class="ion-activatable ripple-parent text-center">
+                <ion-icon name="download"></ion-icon>
+                <ion-ripple-effect></ion-ripple-effect>
+            </div>
 
-        <div class="ion-activatable ripple-parent text-center">
-            <ion-icon name="download"></ion-icon>
-            <ion-ripple-effect></ion-ripple-effect>
-        </div>
-
-        <div class="ion-activatable ripple-parent text-center">
-            <ion-icon name="share"></ion-icon>
-            <ion-ripple-effect></ion-ripple-effect>
+            <div class="ion-activatable ripple-parent text-center" (click)="goBack()">
+                <ion-icon name="close-outline"></ion-icon>
+                <ion-ripple-effect></ion-ripple-effect>
+            </div>
         </div>
 
     </div>
