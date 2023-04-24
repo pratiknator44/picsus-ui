@@ -18,7 +18,6 @@ import { TokenInterceptor } from './services/interceptors';
 import { LoggedInGuardService } from './services/loggedIn.service';
 import { StorageService } from './services/storage.service';
 // import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 @NgModule({
   declarations: [AppComponent, LoginComponent, OtpComponent],
   entryComponents: [],
@@ -34,14 +33,14 @@ import { StorageService } from './services/storage.service';
     LoggedInGuardService,
     StorageService,
     {
-    provide: RouteReuseStrategy,
-    useClass: IonicRouteStrategy
-  },
-  {
-    provide: HTTP_INTERCEPTORS,
-    useClass: TokenInterceptor,
-    multi: true
-  },
+      provide: RouteReuseStrategy,
+      useClass: IonicRouteStrategy
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
     APIService,
     CredentailService
   ],

@@ -31,7 +31,7 @@ export class TokenInterceptor implements HttpInterceptor {
             const toast = await this._toastController.create({
               message: '401 bad request'+ JSON.stringify(err),
               duration: 1500,
-              color: 'danger'
+              color: 'danger',
             })
             await toast.present();
           }
@@ -41,7 +41,8 @@ export class TokenInterceptor implements HttpInterceptor {
             const toast = await this._toastController.create({
               message: '500 status '+ JSON.stringify(err),
               duration: 1500,
-              color: 'danger'
+              color: 'danger',
+              position: 'top'
             })
             await toast.present();
           }

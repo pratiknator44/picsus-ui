@@ -3,6 +3,7 @@
     <ion-title>
       New Profile Picture
     </ion-title>
+    <ion-button color="success" class="mr-2" slot="end" (click)="cropAndUpload()">Upload</ion-button>
   </ion-toolbar>
 </ion-header>
 
@@ -14,8 +15,8 @@
     <h4>Upload</h4>
   </div>
   <image-cropper class="h-100 w-100" [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true"
-    [aspectRatio]="1" [resizeToWidth]="200" [format]="['jpg', 'jpeg']" (imageCropped)="imageCropped($event)"
-    (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"></image-cropper>
+    [aspectRatio]="1" [resizeToWidth]="200" [format]="'jpeg'"(imageCropped)="imageCropped($event)"
+    (imageLoaded)="imageLoaded($event)" (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"></image-cropper>
 </div>
 <div class="text-center" *ngIf="croppedImage">
   <ion-button color="success" (click)="cropAndUpload()">Crop and Upload</ion-button>

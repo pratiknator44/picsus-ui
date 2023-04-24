@@ -3,13 +3,15 @@
     <ion-title>
       Events & Library
     </ion-title>
+    <ion-button slot="end" class="mr-2" id="join-album-modal-trigger">Join</ion-button>
+
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-progress-bar type="indeterminate" *ngIf="refreshingAlbums"></ion-progress-bar>
-  <ion-fab id="open-new-lib-modal" slot="fixed" vertical="top" horizontal="end" [edge]="true"
-    (click)="routeToNewGalleryWizard()">
+  <ion-fab id="open-new-lib-modal" slot="fixed" vertical="bottom" horizontal="end" [edge]="true"
+    style="margin-bottom: 3rem;" (click)="routeToNewGalleryWizard()">
     <ion-fab-button>
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
@@ -53,8 +55,8 @@
       <div class="wrapper m-3">
         <h1>Delete {{selectedAlbum?.name }}?</h1>
 
-        <ion-label>Are you shure you to delete <strong>{{selectedAlbum?.name}}</strong> ?<br> only creator can delete
-          this album</ion-label>
+        <div class="text-black">Are you shure you to delete <strong>{{selectedAlbum?.name}}</strong> ?<br> only creator can delete
+          this album</div>
         <div class="d-flex">
           <ion-button class="w-50" (click)="confirmDeleteModal.dismiss()">No</ion-button>
           <ion-button class="w-50" type="danger" (click)="confirmDeleteModal.dismiss(); deleteAlbum()">Yes</ion-button>
@@ -70,4 +72,31 @@
     <ion-spinner name="crescent"></ion-spinner>
     <ion-label class="ion-margin-start">Deleting your album, please wait</ion-label>
   </div>
+
+
+
+  <!-- join album modal -->
+  <ion-modal id="join-album-modal" #joinAlbumModal trigger="join-album-modal-trigger">
+    <ng-template>
+      <div class="wrapper m-3 text-center">
+        <div *ngIf="!joinAlbum.isVerifying && !joinAlbum.confirmJoin">
+
+
+          <div class="text-black">Kindly copy the album link provided to you and click Paste below:</div>
+          <ion-button class="mt-2" (click)="pasteLink(true)" [disabled]="joinAlbum.isVerifying">Paste Link</ion-button>
+        </div>
+        <ion-spinner name="crescent" *ngIf="joinAlbum.isVerifying && !joinAlbum.confirmJoin"></ion-spinner>
+        <div *ngIf="albumAboutToJoin">
+          <div class="text-black">You're about to join</div>
+          <h2>{{albumAboutToJoin?.name}}</h2>
+          <h5 class="m-0">{{albumAboutToJoin?.createdDate | date: 'MMMM dd, yyyy'}}</h5>
+
+          <ion-button (click)="pasteLink()" [disabled]="joinAlbum.isVerifying">Confirm &nbsp; <ion-spinner
+              name="crescent" *ngIf="joinAlbum.isVerifying"></ion-spinner></ion-button><ion-button fill="outline"
+            (click)="joinAlbumModal.dismiss(); joinAlbum.isVerifying = false; joinAlbum.confirmJoin = false; albumAboutToJoin = null">Cancel</ion-button>
+
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
 </ion-content>

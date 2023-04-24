@@ -4,6 +4,7 @@
 
 
 ion-modal#example-modal,
+ion-modal#join-album-modal,
 ion-modal#confirm-modal {
     --width: fit-content;
     --min-width: 250px;
@@ -13,6 +14,7 @@ ion-modal#confirm-modal {
 }
 
 ion-modal#example-modal h1,
+ion-modal#join-album-modal h1,
 ion-modal#confirm-modal h1 {
     margin: 20px 20px 10px 20px;
 }
@@ -28,7 +30,7 @@ ion-modal#example-modal ion-icon {
     color: #aaaaaa;
 }
 
-ion-modal#example-modal .wrapper {
+ion-modal#example-modal .wrapper, ion-modal#join-album-modal .wrapper {
     margin-bottom: 10px;
 }
 

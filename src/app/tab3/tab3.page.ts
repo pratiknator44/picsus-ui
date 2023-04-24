@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastController, ViewWillEnter } from '@ionic/angular';
+import { IonModal, ToastController, ViewWillEnter } from '@ionic/angular';
 import { APIService } from '../services/api.service';
+import { Clipboard } from '@capacitor/clipboard';
+
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
@@ -10,15 +12,24 @@ import { APIService } from '../services/api.service';
 export class Tab3Page implements OnInit, ViewWillEnter {
 
   albums = [];
+  albumAboutToJoin;
   error: string;
   refreshingAlbums: boolean;
   selectedAlbum;
   showBackdrop: boolean;
+
+  @ViewChild('joinAlbumModal') joinAlbumModal: IonModal;
+
+  joinAlbum = {
+    joinLink: { value: null, type: null },
+    isVerifying: false,
+    confirmJoin: false
+  }
+
   constructor(private _router: Router, private _apiService: APIService, private _toastController: ToastController) { }
 
 
   ngOnInit() {
-    this.refreshingAlbums = true;
     this.error = null;
     this.getAlbums();
   }
@@ -28,6 +39,7 @@ export class Tab3Page implements OnInit, ViewWillEnter {
   }
 
   getAlbums() {
+    this.refreshingAlbums = true;
     this._apiService.getAlbum().then(albums => {
       this.albums = albums['albums'];
       this.albums.forEach(album => {
@@ -57,7 +69,7 @@ export class Tab3Page implements OnInit, ViewWillEnter {
     this._apiService.deleteAlbum('1234').subscribe(res => {
       this.showBackdrop = false;
     }, (e) => {
-      this.presentToast( JSON.stringify(e));
+      this.presentToast(JSON.stringify(e));
       this.showBackdrop = false;
     });
   };
@@ -71,6 +83,37 @@ export class Tab3Page implements OnInit, ViewWillEnter {
     });
 
     await toast.present();
+  }
+
+  async pasteLink(showPresence?: boolean) {
+    this.joinAlbum.isVerifying = true;
+    this.joinAlbum.joinLink = await Clipboard.read();
+
+    if (this.joinAlbum.joinLink.type !== 'text/plain') {
+      (await this._toastController.create({
+        message: 'Please paste a valid link',
+        duration: 4000,
+        position: 'top',
+        color: 'danger'
+      })).present();
+      return;
+    }
+
+    this.albumAboutToJoin = null;
+    this._apiService.joinAlbumViaToken(this.joinAlbum.joinLink.value, showPresence).subscribe(
+      res => {
+        this.albumAboutToJoin = res['album'];
+        this.joinAlbum.confirmJoin = showPresence;
+        this.joinAlbum.isVerifying = false
+        if (!showPresence) {
+          this.joinAlbumModal.dismiss();
+          this.getAlbums();
+        }
+      },
+      () => {
+        this.joinAlbum.isVerifying = false;
+        if (!showPresence) this.joinAlbumModal.dismiss();
+      });
   }
 
   onWillDismissNewLibraryModal(event) { }

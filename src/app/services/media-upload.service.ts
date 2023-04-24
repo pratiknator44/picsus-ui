@@ -1,13 +1,20 @@
 import { Injectable } from "@angular/core";
-import { take } from "rxjs/operators";
+import { Filesystem } from "@capacitor/filesystem";
+import { Directory } from "@capacitor/filesystem/dist/esm/definitions";
 import { APIService } from "./api.service";
+
 
 @Injectable({
     providedIn: 'root'
 })
 export class MediaUploadService {
     
+
+    assumedCameraPath = '/storage/emulated/0/DCIM/Camera/'
+    contents;
     constructor(private _apiService: APIService) {}
+
+
 
     uploadQueue(albumId, fileQueue: File[]) {
         try {
@@ -21,5 +28,14 @@ export class MediaUploadService {
             console.log(e);
         }
       
+    }
+
+
+    // detection of camera folder for changes
+    async checkCameraGalleryContent() {
+        this.contents = await Filesystem.readdir({
+            directory: Directory.External,
+            path: this.assumedCameraPath
+        });
     }
 }

@@ -41,8 +41,6 @@ export class DpComponent implements OnInit {
   }
 
   async cropAndUpload() {
-    console.log("crop and upload init");
-    // if(this.flags.isDisabled) return;
     this.loader = await this._loadingController.create({
       message: 'Uploading...',
     });

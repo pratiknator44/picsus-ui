@@ -16,5 +16,15 @@
     <br>
     <span *ngIf="selectedImagesSrc?.length === 0">No file selected yet</span>
     <br>
-    <img [src]="src" style="max-width: 4rem; max-height: 4rem;" *ngFor="let src of selectedImagesSrc" />
+
+    <h3>People in this gallery</h3>
+    <ion-item *ngFor="let src of selectedImagesSrc; let i = index">
+      <ion-avatar slot="start">
+        <img [alt]="" [src]="src" />
+      </ion-avatar>
+      <ion-label>
+        <span class="float-right">{{uploadProgress[i] ? ((uploadProgress[i] | number: '0.0-0') + '%') : 'Pending'}}</span>
+        <ion-progress-bar [value]="uploadProgress[i]/100" [color]=" uploadProgress[i] === 0 ? 'medium' : 'primary' "></ion-progress-bar><br>
+    </ion-label>
+    </ion-item>
 </ion-content>

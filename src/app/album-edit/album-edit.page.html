@@ -3,6 +3,8 @@
     <ion-title>
       Gallery Info/Edit
     </ion-title>
+    <ion-button id="leave-album-modal-trigger" slot="end" class="mr-2" color="danger">Exit</ion-button>
+
   </ion-toolbar>
 </ion-header>
 
@@ -24,15 +26,20 @@
     </div>
     <div>
       <div class="d-flex w-100">
-        <ion-button (click)="routeToAlbumContent()">
+        <div class="w-50">
           <ion-label position="stacked">Photos</ion-label>
           <h2>{{ totals?.media }}</h2>
-        </ion-button>
-        <ion-button>
+        </div>
+
+        <div class="w-50">
           <ion-label position="stacked">Contributors</ion-label>
           <h2>{{ totals?.contributors }}</h2>
-        </ion-button>
+        </div >
+
       </div>
+    </div>
+    <div class="d-flex w-100" style="justify-content: center;">
+      <ion-button color="primary" (click)="getJoiningLink()">Copy Joining Link</ion-button>
     </div>
   </div>
 
@@ -65,9 +72,25 @@
         {{user?.fname + ' ' + user?.lname}}
       </ion-label>
     </ion-item>
-  </div>
+    </div>
 
 
+    <!-- exit from album confirmation modal -->
+    <ion-modal id="leave-album-modal" #leaveAlbumModal trigger="leave-album-modal-trigger">
+      <ng-template>
+        <div class="wrapper m-3 text-center">
+          
+          <ion-spinner name="crescent" *ngIf="exitingAlbum"></ion-spinner> 
+          <div *ngIf="!exitingAlbum">
+            <div class="text-black">Are you sure you want to exit from</div>
+            <h2 class="text-black">{{album?.name}}</h2>  
+            <div class="text-black">All your uploads will remain intact in this album. Creator cannot exit the gallery</div>
 
+            <ion-button (click)="exitAlbum()" color="danger" [disabled]="false"> Confirm </ion-button><ion-button fill="outline"
+              (click)="leaveAlbumModal.dismiss()">Cancel</ion-button>
+          </div>
+        </div>
+      </ng-template>
+    </ion-modal>
 
 </ion-content>

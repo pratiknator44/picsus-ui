@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
 
 // provided in root
 @Injectable()
@@ -17,5 +18,11 @@ export class StorageService {
   saveTokenAndUser(token, user) {
     localStorage.setItem('user', user);
     localStorage.setItem('authtoken', token);
+  }
+
+  flushAll() {
+    localStorage.clear();
+    sessionStorage.clear();
+    this.user = null;
   }
 }

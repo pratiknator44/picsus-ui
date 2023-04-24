@@ -3,6 +3,7 @@
     <ion-title>
       Profile
     </ion-title>
+    <ion-button slot="end" class="mr-2" (click)="logout()"><ion-icon name="power-outline"></ion-icon></ion-button>
   </ion-toolbar>
 </ion-header>
 
@@ -10,12 +11,11 @@
   <div class="m-2">
     <div class="m-3 position-relative">
       <div class="circle overflow-hidden" style="width: 10rem; height: 10rem; margin-left: auto; margin-right: auto;">
-        <img class="h-100 w-100"
-          [src]="dpSrc" />
+        <img class="h-100 w-100" [src]="dpSrc" />
       </div>
       <div style="height: 2rem; width: 2rem; left: calc(65% - 1rem); top: calc(100% - 2rem);"
-        class="bg-primary circle text-white position-absolute">
-        <a routerLink="/tabs/dp">
+        class="bg-primary circle position-absolute">
+        <a routerLink="/tabs/dp" class="text-white">
           <ion-icon name="pencil-outline" style="margin:0.5rem;">
           </ion-icon>
         </a>
@@ -27,8 +27,9 @@
       <ion-label color="dark-tint" position="stacked">Name</ion-label>
       <h2 class="p-0 m-0">
         <span *ngIf="user?.fname">{{ user?.fname+' '+user?.lname }}</span>
-        <span *ngIf="!user?.fname" class="text-secondary" id="open-edit-modal">[No Name]</span>
-        <ion-icon name="pencil-outline" id="open-edit-modal"></ion-icon></h2>
+        <span *ngIf="!user?.fname" class="text-secondary">[No Name]</span>
+        <span>&nbsp;<ion-icon name="pencil-outline" id="open-edit-modal"></ion-icon></span>
+      </h2>
     </ion-list>
 
     <ion-list>
@@ -36,50 +37,52 @@
       <h5 class="p-0 m-0">{{user?.accountType | acType }}</h5>
     </ion-list>
 
-    <div class="center">
+    <!-- <div class="center">
       <pi-circular-progress [value]="0.24"></pi-circular-progress>
     </div>
     <div class="text-center mt-3">
       <ion-button color="primary">Diagnose Droid</ion-button>
-    </div>
+    </div> -->
     <!-- <div class="text-center mt-3">
       <ion-button color="danger">Log Out</ion-button>
     </div> -->
+
+    <br><br>
+    You can start with creating a new album and uploading images there. <ion-button size="small"
+      routerLink="/tabs/tab3">Goto Albums</ion-button>
+
+      <br><br>
   </div>
 
 
   <!-- change name -->
-  <ion-modal
-  trigger="open-edit-modal"
-  [breakpoints]="[0.25, 0.5, 1]"
-  [initialBreakpoint]="0.25"
->
-  <ng-template>
-    <ion-content>
-      <div class="m-2">
-        <ion-grid>
-          <ion-row>
-            <ion-col size="6">
-              <ion-item>
-                <ion-label color="dark" position="stacked">First Name</ion-label>
-                <ion-input type="text" class="w-50" #fname [autofocus]="true" [value]="user?.fname ?? ''"></ion-input>
-              </ion-item>
-            </ion-col>
+  <ion-modal trigger="open-edit-modal" [breakpoints]="[0.25, 0.5, 1]" [initialBreakpoint]="0.25" #editNameModal>
+    <ng-template>
+      <ion-content>
+        <div class="m-2">
+          <ion-grid>
+            <ion-row>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label color="dark" position="stacked">First Name</ion-label>
+                  <ion-input type="text" class="w-50" #fname [autofocus]="true" [value]="user?.fname ?? ''"></ion-input>
+                </ion-item>
+              </ion-col>
 
-            <ion-col size="6">
-              <ion-item>
-                <ion-label color="dark" position="stacked">Last Name</ion-label>
-                <ion-input type="text" class="w-50" #lname [autofocus]="true" [value]="user?.lname ?? ''"></ion-input>
-              </ion-item>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label color="dark" position="stacked">Last Name</ion-label>
+                  <ion-input type="text" class="w-50" #lname [autofocus]="true" [value]="user?.lname ?? ''"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
 
-
-        <ion-button class="float-right" (click)="saveName(fname.value, lname.value)">Save</ion-button>
-      </div>
-    </ion-content>
-  </ng-template>
-</ion-modal>
-<!-- change name ends -->
+          <ion-button class="float-right"
+            (click)="saveName(fname.value, lname.value); editNameModal.dismiss()">Save</ion-button>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+  <!-- change name ends -->
 </ion-content>

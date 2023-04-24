@@ -6,7 +6,11 @@ import { APIvars } from "../enums/apivars.enum";
 })
 export class AddDomainPipe implements PipeTransform {
 
-    transform(word: string) {
+    transform(word: string, extension?: string) {
+
+        if(extension) {
+            word = word.split('.')[0]+'.'+extension;
+        }
         return APIvars.domain + '/' + word;
     }
 }

@@ -1,9 +1,10 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import { IonModal, ToastController } from '@ionic/angular';
+import { APIvars } from '../enums/apivars.enum';
 import { APIService } from '../services/api.service';
-
+import { Clipboard } from '@capacitor/clipboard';
 @Component({
     selector: 'pi-album-edit',
     templateUrl: 'album-edit.page.html',
@@ -20,6 +21,8 @@ export class AlbumEditComponent {
     totals = { contributors: 0, media: 0 };
     isUpdatingInfo: boolean;
     isInfoLoading: boolean;
+    exitingAlbum: boolean;
+    @ViewChild('leaveAlbumModal') leaveAlbumModal: IonModal;
 
     constructor(private _apiService: APIService,
         private _activeRoute: ActivatedRoute,
@@ -69,27 +72,59 @@ export class AlbumEditComponent {
         this._apiService.updateAlbumInfo(this.album['_id'],
             this.albumForm.get('name').value,
             this.albumForm.get('description').value).subscribe(async (res) => {
-                const toast = await this._toastController.create({
-                    message: 'Gallery info updated',
-                    duration: 1500,
-                    color: 'success',
-                    position: 'top'
-                });
-                await toast.present();
+                this.makeToast('Gallery info updated', 'success');
                 this.isUpdatingInfo = false;
             }, async (e) => {
-                const toast = await this._toastController.create({
-                    message: 'Error in updating info: ' + JSON.stringify(e),
-                    duration: 1500,
-                    color: 'danger',
-                    position: 'top'
-                });
-                await toast.present();
+                this.makeToast('Error in updating info: ' + JSON.stringify(e), 'danger');
                 this.isUpdatingInfo = false;
             });
     }
 
     routeToAlbumContent() {
-        this._router.navigate(['../']);
+    }
+
+    async getJoiningLink() {
+
+        try {
+            await Clipboard.write({
+                string: this.album.link
+            });
+            (await this._toastController.create({
+                message: 'Joining Link copied to Clipboard',
+                duration: 1500,
+                position: 'top'
+            })).present();
+        }
+        catch (e) {
+            (await this._toastController.create({
+                message: e,
+                color: 'danger',
+                position: 'top'
+            })).present();
+        }
+
+    }
+
+    async makeToast(message, color?, position: 'top' | 'middle' | 'bottom' = 'top') {
+        const toast = await this._toastController.create({
+            message,
+            duration: 1500,
+            color,
+            position: position
+        });
+        await toast.present();
+    }
+
+    async exitAlbum() {
+        
+        this.exitingAlbum = true;
+        this._apiService.leaveAlbumById(this.album._id).subscribe(res => {
+            this.exitingAlbum = false;
+            this._router.navigate(['tabs/tab3']);
+            this.leaveAlbumModal.dismiss();
+        }, async (e) => {
+            this.exitingAlbum = false;
+            this.leaveAlbumModal.dismiss();
+        });
     }
 }

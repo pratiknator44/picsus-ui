@@ -7,11 +7,15 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Galleries</ion-title>
-    </ion-toolbar>
-  </ion-header>
 
-  <app-explore-container></app-explore-container>
+  contents: {{contents | json }}
+  <input type="text" [(ngModel)]="contents" />
+  <br><br>
+  <ion-button (click)="cache()">Cache</ion-button>
+  <ion-button (click)="data()">Data</ion-button>
+  <ion-button (click)="doc()">Document</ion-button>
+  <ion-button (click)="lib()">Library</ion-button>
+  <ion-button (click)="ext()">External</ion-button>
+  <ion-button (click)="extStorage()">External Storage</ion-button>
+
 </ion-content>

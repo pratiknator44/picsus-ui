@@ -56,12 +56,12 @@ export class APIService {
     return this._http.post(this.domain + APIvars.get_album_contents, {albumId}).toPromise();
   }
 
-  saveSingleImage(albumId: string, mediaFile: File) {
+  saveSingleImage(albumId: string, mediaFile: File, reportProgress?) {
     const formData = new FormData();
     formData.append('file', mediaFile);
     formData.append('albumId', albumId);
     formData.append('defyThumbnail', 'true');
-    return this._http.post(APIvars.domain+APIvars.save_image, formData);
+    return this._http.post(this.domain+APIvars.save_image, formData, {reportProgress, observe: 'events'});
   }
 
   deleteAlbum(albumId) {
@@ -76,4 +76,19 @@ export class APIService {
     return this._http.post(this.domain + APIvars.update_album_info, {albumId, edit: {name, description}}).pipe(take(1));
   }
 
+  getAlbumJoiningLink(albumId: string) {
+    return this._http.post(this.domain + APIvars.get_album_link, {albumId}).pipe(take(1));
+  }
+
+  getImageInfo(imageId: string) {
+    return this._http.post(this.domain + APIvars.get_image_info, {imageId}).pipe(take(1));
+  }
+
+  joinAlbumViaToken(token: string, confirmPresence) {
+    return this._http.post(this.domain + APIvars.join_album_via_token, {token, confirmPresence}).pipe(take(1));
+  }
+
+  leaveAlbumById(albumId: string) {
+    return this._http.post(this.domain+APIvars.leave_album_by_id, {albumId}).pipe(take(1));
+  }
 }
