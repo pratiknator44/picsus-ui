@@ -20,7 +20,7 @@
         <ion-label position="floating">Description</ion-label>
         <ion-textarea placeholder="Enter description" formControlName="description"></ion-textarea>
       </ion-item>
-      
+
 
       <ion-item>
         <ion-label position="stacked">Number of days</ion-label>
@@ -43,14 +43,28 @@
 <ng-template #creationResult>
 
   <ion-content [fullscreen]="true">
-
-
     <app-explore-container>
-      Yeyy! Gallery creation success
-      <br>
-      {{creationRes | json}}
-      <br>
-      <a><ion-button>Explore Gallery</ion-button></a>
+      <ion-header [translucent]="true">
+        <ion-toolbar color="primary">
+          <ion-title>
+            Gallery Created
+          </ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <div class="m-2">
+        <h2>{{creationRes?.album?.name}}</h2>
+        Album has been created
+      
+        <ion-button size="small" (click)="copyLink()">Copy the joining link</ion-button> and share with people you'd like to add in this album
+          who'd see and contribute to photos of the event
+        
+          <div class="text-center">
+            <ion-button (click)="copyLink()">Copy Joining Link</ion-button>
+            <a href="#/tabs/tab3"><ion-button>Explore Album</ion-button></a>
+          </div>
+      </div>
+      
+     
     </app-explore-container>
   </ion-content>
 </ng-template>

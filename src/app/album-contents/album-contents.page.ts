@@ -61,7 +61,7 @@ export class AlbumContentsPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   routeToUploadByAlbum() {
-    this._router.navigate(['upload'], {relativeTo: this._activeRoute});
+    this._router.navigate(['upload'], {relativeTo: this._activeRoute, queryParams: {albumName: this.album.name}});
   }
 
   routeToInfo() {

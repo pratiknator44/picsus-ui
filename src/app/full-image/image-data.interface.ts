@@ -4,6 +4,7 @@ export interface IImageData {
     uploadedOn: string; // Date().isoString()
     takenOn: string;
     uploaderId: string;
+    uploaderName: any;
     _id: string;
     exif?: IExif
 }

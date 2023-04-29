@@ -1,16 +1,19 @@
-import { Component, Input, OnChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonModal, ToastController } from '@ionic/angular';
 import { APIvars } from '../enums/apivars.enum';
 import { APIService } from '../services/api.service';
 import { Clipboard } from '@capacitor/clipboard';
+import { StorageService } from '../services/storage.service';
+import { PushService } from '../services/push.service';
+import { DOMService } from '../services/dom.services';
 @Component({
     selector: 'pi-album-edit',
     templateUrl: 'album-edit.page.html',
     styleUrls: ['album-edit.page.scss']
 })
-export class AlbumEditComponent {
+export class AlbumEditComponent implements OnInit {
 
     @Input() albumId;
     albumForm: FormGroup;
@@ -22,12 +25,17 @@ export class AlbumEditComponent {
     isUpdatingInfo: boolean;
     isInfoLoading: boolean;
     exitingAlbum: boolean;
+    isCreator: boolean; // show delete album button if user is  a creator
+
     @ViewChild('leaveAlbumModal') leaveAlbumModal: IonModal;
 
     constructor(private _apiService: APIService,
         private _activeRoute: ActivatedRoute,
         private _toastController: ToastController,
-        private _router: Router) {
+        private _router: Router,
+        private _storageService: StorageService,
+        private _pushService: PushService,
+        private _domService: DOMService) {
 
         this.albumForm = new FormGroup({
             name: new FormControl('', Validators.required),
@@ -41,11 +49,17 @@ export class AlbumEditComponent {
         });
     }
 
+
+    ngOnInit(): void {
+        console.log(this._storageService.user);
+    }
     getAlbumDetails(albumId) {
         this.isInfoLoading = true;
         this._apiService.getAlbumInfo(albumId).subscribe(res => {
             console.log(res);
             this.album = res['album'];
+            this.isCreator = this._storageService.user._id === this.album.creator;
+
             this.creator = res['contributorsData'][0] ?? null;
             this.contributors = res['contributorsData'] ?? [];
             this.albumForm.patchValue({
@@ -83,26 +97,8 @@ export class AlbumEditComponent {
     routeToAlbumContent() {
     }
 
-    async getJoiningLink() {
-
-        try {
-            await Clipboard.write({
-                string: this.album.link
-            });
-            (await this._toastController.create({
-                message: 'Joining Link copied to Clipboard',
-                duration: 1500,
-                position: 'top'
-            })).present();
-        }
-        catch (e) {
-            (await this._toastController.create({
-                message: e,
-                color: 'danger',
-                position: 'top'
-            })).present();
-        }
-
+    getJoiningLink() {
+        this._domService.getJoiningLink(this.album.link, 'Joining Link copied to Clipboard');
     }
 
     async makeToast(message, color?, position: 'top' | 'middle' | 'bottom' = 'top') {
@@ -119,12 +115,31 @@ export class AlbumEditComponent {
         
         this.exitingAlbum = true;
         this._apiService.leaveAlbumById(this.album._id).subscribe(res => {
-            this.exitingAlbum = false;
-            this._router.navigate(['tabs/tab3']);
-            this.leaveAlbumModal.dismiss();
-        }, async (e) => {
+           this.afterExitOrDelete();
+           
+        }, (e) => {
+            this.makeToast('Album exit error', JSON.stringify(e));
             this.exitingAlbum = false;
             this.leaveAlbumModal.dismiss();
         });
+    }
+
+    deleteAlbum() {
+        this.exitingAlbum = true;
+        this._apiService.deleteAlbum(this.album._id).subscribe(res => {
+            this.makeToast('Album successfully deleted', 'success');
+            this.afterExitOrDelete();
+        }, (e) => {
+            this.makeToast('Album exit error', JSON.stringify(e));
+            this.exitingAlbum = false;
+            this.leaveAlbumModal.dismiss();
+        });
+    }
+
+    afterExitOrDelete() {
+        this._pushService.notifyLeaveAlbum(this.album._id, this.album['name']);
+        this.exitingAlbum = false;
+        this._router.navigate(['tabs/tab3']);
+        this.leaveAlbumModal.dismiss();
     }
 }

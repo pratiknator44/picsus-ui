@@ -3,7 +3,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { OtpComponent } from './otp/otp.component';
-import { LoggedInGuardService } from './services/loggedIn.service';
+import { LoggedInGuardService } from './services/loggedIn.guard';
 import { TabsPage } from './tabs/tabs.page';
 
 const routes: Routes = [

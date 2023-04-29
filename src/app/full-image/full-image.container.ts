@@ -8,6 +8,7 @@ import { APIvars } from "../enums/apivars.enum";
 import { Filesystem, Directory } from "@capacitor/filesystem";
 import { APIService } from "../services/api.service";
 import { IExifSubObject, IImageData } from "./image-data.interface";
+import { DOMService } from "../services/dom.services";
 
 @Component({
     selector: 'pi-full-image',
@@ -25,12 +26,13 @@ export class FullImageComponent implements OnInit {
     file;
     imageData: IImageData;
     exif: any;
-    
+
     constructor(private _activeRoute: ActivatedRoute,
         private _router: Router,
         private _http: HttpClient,
         private _toastController: ToastController,
-        private _apiService: APIService
+        private _apiService: APIService,
+        private _domService: DOMService
     ) {
         this.targetDir = Directory.Data;
 
@@ -52,30 +54,10 @@ export class FullImageComponent implements OnInit {
 
     async downloadImage() {
         try {
-            this._http.get(APIvars.domain + '/media/' + this.photoId, { responseType: 'blob' })
-                .subscribe(async (data: Blob) => {
-                    let b64img;
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        b64img = reader.result;
-                    }
-                    reader.readAsDataURL(data);
-
-                    Filesystem.writeFile({ path: 'myrext.txt', directory: Directory.Data, data: b64img }).then(async (res) => {
-                        const toast = await this._toastController.create({
-                            message: 'created successfully',
-                            duration: 1500
-                        });
-                        toast.present();
-                    })
-                });
+            this._domService.usePhotoGallery(APIvars.domain + '/media/' + this.photoId);
+            (await this._toastController.create({ message: "no error", duration: 4000 })).present();
         } catch (e) {
-            console.log(e);
-            const toast = await this._toastController.create({
-                message: 'created failed',
-                duration: 1500
-            });
-            toast.present();
+            (await this._toastController.create({ message: JSON.stringify(e), duration: 4000 })).present();
         }
     }
 

@@ -26,7 +26,7 @@ import { AlbumContentsPage } from "./album-contents.page";
                 component: AlbumContentsPage,
             },{
                 path: ':id/upload',
-                component: UploadComponent
+                component: UploadComponent,
             },
             {
                 path: ':id/edit',

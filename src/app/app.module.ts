@@ -15,7 +15,7 @@ import { PipesModule } from './pipes/pipes.module';
 import { APIService } from './services/api.service';
 import { CredentailService } from './services/credential.service';
 import { TokenInterceptor } from './services/interceptors';
-import { LoggedInGuardService } from './services/loggedIn.service';
+import { LoggedInGuardService } from './services/loggedIn.guard';
 import { StorageService } from './services/storage.service';
 // import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({

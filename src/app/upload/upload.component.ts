@@ -5,6 +5,8 @@ import { AnimationController, ViewWillEnter } from "@ionic/angular";
 import { take } from "rxjs/operators";
 import { APIService } from "../services/api.service";
 import { MediaUploadService } from "../services/media-upload.service";
+import { PushService } from "../services/push.service";
+import { StorageService } from "../services/storage.service";
 
 @Component({
     selector: 'pi-upload',
@@ -13,22 +15,26 @@ import { MediaUploadService } from "../services/media-upload.service";
 })
 export class UploadComponent implements OnInit, ViewWillEnter {
 
-    album;
+    albumId;
+    albumName;
     selectedImagesSrc: string[];;
     selectedFiles: File[];
     uploadProgress = [];
     promises = [];
+
     constructor(
         private _activeRoute: ActivatedRoute,
         private _apiService: APIService,
-        private _router: Router,
-        private _mediaUploadService: MediaUploadService) { }
+        private _pushService: PushService,
+        private _storageService: StorageService) { }
 
     ngOnInit() {
         this._activeRoute.params.pipe(take(1)).subscribe(res => {
-            console.log(res);
-            this.album = res['id'];
+            this.albumId = res['id'];
         });
+        this._activeRoute.queryParams.pipe(take(1)).subscribe(res => {
+            this.albumName = res['albumName'];
+        })
         this.selectedImagesSrc = [];
     }
 
@@ -37,7 +43,6 @@ export class UploadComponent implements OnInit, ViewWillEnter {
     }
 
     filesSelected(fileEvent: Event) {
-        // console.log(fileEvent.target['files']);
         this.selectedFiles = Object.values(fileEvent.target['files']) as File[];
         const len = this.selectedFiles.length;
 
@@ -57,7 +62,13 @@ export class UploadComponent implements OnInit, ViewWillEnter {
     }
 
     uploadImageToServer() {
-        this.uploadQueue(this.album, this.selectedFiles);
+        console.log(this._storageService.user.fname);       
+        this.uploadQueue(this.albumId, this.selectedFiles);
+        this._pushService.notifyUploading({
+            albumName: this.albumName, 
+            albumId: this.albumId,
+            senderName: this._storageService.user.fname ?? this._storageService.user.lname
+        });
     }
 
 
@@ -66,16 +77,17 @@ export class UploadComponent implements OnInit, ViewWillEnter {
             const len = fileQueue.length;
             this.uploadProgress = [];
             this.promises = [];
+
             for (let x = 0; x < len; x++) {
                 this.uploadProgress[x] = 0;
-                
+
                 this.promises[x] = this._apiService.saveSingleImage(albumId, fileQueue[x], true)
-                .subscribe((res: HttpEvent<any>) => {
-                    // console.log(res);
-                    if (res.type === HttpEventType.UploadProgress) {
-                        this.uploadProgress[x] = res.loaded * 100 / res.total;
-                    }
-                });
+                    .subscribe((res: HttpEvent<any>) => {
+                        // console.log(res);
+                        if (res.type === HttpEventType.UploadProgress) {
+                            this.uploadProgress[x] = res.loaded * 100 / res.total;
+                        }
+                    });
 
                 await this.promises[x];
             }

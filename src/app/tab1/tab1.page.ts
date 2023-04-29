@@ -5,6 +5,7 @@ import { APIvars } from '../enums/apivars.enum';
 import { APIService } from '../services/api.service';
 import { StorageService } from '../services/storage.service';
 import { take } from 'rxjs/operators';
+import { PushService } from '../services/push.service';
 
 @Component({
   selector: 'app-tab1',
@@ -16,10 +17,10 @@ export class Tab1Page implements OnInit {
   user;
   dpSrc: String;
   constructor(private _storageService: StorageService,
-    private _activeRoute: ActivatedRoute,
     private _apiService: APIService,
     private _toastController: ToastController,
-    private _router: Router) { }
+    private _router: Router,
+    private _pushService: PushService) { }
 
   ngOnInit(): void {
     this.refreshUserData();
@@ -47,7 +48,6 @@ export class Tab1Page implements OnInit {
         }
       }
     }).catch(async error => {
-      console.log(error);
       const toast = await this._toastController.create({
         message: JSON.stringify(error),
         duration: 3000
@@ -58,7 +58,9 @@ export class Tab1Page implements OnInit {
 
 
   logout() {
+    this.user = null;
     this._storageService.flushAll();
-    this._router.navigate(['login']);
+    this._router.navigate(['/login']);
+    this._pushService.disconnect(); this._pushService.startConnection();
   }
 }

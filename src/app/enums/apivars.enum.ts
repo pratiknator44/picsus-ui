@@ -1,5 +1,5 @@
 export enum APIvars {
-  domain = 'https://practical-pine-31844.pktriot.net',
+  domain = 'http://localhost:3000', // 'https://practical-pine-31844.pktriot.net', //
   APIallowAll = '*',
   generateOTP = 'users/generateOTP',
   confirmotp = 'users/confirmotp',
@@ -19,5 +19,6 @@ export enum APIvars {
   get_album_link = 'media/getLink',
   get_image_info = 'media/getImageInfo',
   join_album_via_token = 'media/joinAlbumViaToken',
-  leave_album_by_id = 'media/leaveAlbum'
+  leave_album_by_id = 'media/leaveAlbum',
+  get_user_rooms = 'media/userRooms'
 }

@@ -34,7 +34,7 @@
               <!-- <ion-button slot="end" class="mr-2" (click)="logout()"><ion-icon name="power-outline"></ion-icon></ion-button> -->
             </ion-toolbar>
           </ion-header>
-        <ion-grid class="w-100">
+        <ion-grid class="w-100 text-black">
             <ion-row>
                 <ion-col size="6">
                     File Name
@@ -57,7 +57,7 @@
                     Uploaded by
                 </ion-col>
                 <ion-col size="6">
-                    Some user <ion-icon name="map"></ion-icon>
+                    {{imageData?.uploaderName?.fname}} {{imageData?.uploaderName?.lname}}
                 </ion-col>
             </ion-row>
 

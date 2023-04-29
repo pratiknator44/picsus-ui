@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Directory, Filesystem } from '@capacitor/filesystem';
-import { ViewDidEnter } from '@ionic/angular';
+import { ToastController, ViewDidEnter } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-tab2',
@@ -63,13 +64,15 @@ export class Tab2Page implements OnInit, ViewDidEnter {
       }
     ]
   }
-  constructor() {
+  constructor(private _toastCtrl: ToastController) {
     
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.loadContent(Directory.Cache);
   }
+
+
   ionViewDidEnter(): void {
     this.loadContent;
   }

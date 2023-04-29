@@ -3,7 +3,7 @@
     <ion-title>
       Gallery Info/Edit
     </ion-title>
-    <ion-button id="leave-album-modal-trigger" slot="end" class="mr-2" color="danger">Exit</ion-button>
+    <ion-button id="leave-album-modal-trigger" slot="end" class="mr-2" color="danger">{{isCreator? 'Delete' : 'Exit'}}</ion-button>
 
   </ion-toolbar>
 </ion-header>
@@ -82,11 +82,14 @@
           
           <ion-spinner name="crescent" *ngIf="exitingAlbum"></ion-spinner> 
           <div *ngIf="!exitingAlbum">
-            <div class="text-black">Are you sure you want to exit from</div>
+            <div class="text-black">Are you sure you want to {{ isCreator ? 'Delete' : 'exit from'}}</div>
             <h2 class="text-black">{{album?.name}}</h2>  
-            <div class="text-black">All your uploads will remain intact in this album. Creator cannot exit the gallery</div>
+            <div class="text-black" *ngIf="!isCreator">All your uploads will remain intact in this album. Only creator cannot delete album</div>
+            <div class="text-black" *ngIf="isCreator">All photos will be deleted, all members would be removed. Make sure everybody gets what they need</div>
 
-            <ion-button (click)="exitAlbum()" color="danger" [disabled]="false"> Confirm </ion-button><ion-button fill="outline"
+            <ion-button *ngIf="!isCreator" (click)="exitAlbum()" color="danger" [disabled]="false"> Confirm</ion-button>
+            <ion-button (click)="deleteAlbum()" color="danger" [disabled]="false"> Delete Forever</ion-button>
+            <ion-button fill="outline"
               (click)="leaveAlbumModal.dismiss()">Cancel</ion-button>
           </div>
         </div>

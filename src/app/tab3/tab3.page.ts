@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { IonModal, ToastController, ViewWillEnter } from '@ionic/angular';
 import { APIService } from '../services/api.service';
 import { Clipboard } from '@capacitor/clipboard';
-
+import { PushService } from '../services/push.service';
+import { PushEventNames } from '../enums/push-events.enum';
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
@@ -26,7 +27,10 @@ export class Tab3Page implements OnInit, ViewWillEnter {
     confirmJoin: false
   }
 
-  constructor(private _router: Router, private _apiService: APIService, private _toastController: ToastController) { }
+  constructor(private _router: Router,
+    private _apiService: APIService,
+    private _toastController: ToastController,
+    private _pushService: PushService) { }
 
 
   ngOnInit() {
@@ -99,15 +103,18 @@ export class Tab3Page implements OnInit, ViewWillEnter {
       return;
     }
 
-    this.albumAboutToJoin = null;
     this._apiService.joinAlbumViaToken(this.joinAlbum.joinLink.value, showPresence).subscribe(
       res => {
-        this.albumAboutToJoin = res['album'];
+        console.log(res);
+        if (res['album']) { this.albumAboutToJoin = res['album']; }
+
         this.joinAlbum.confirmJoin = showPresence;
         this.joinAlbum.isVerifying = false
         if (!showPresence) {
           this.joinAlbumModal.dismiss();
           this.getAlbums();
+          // join socket room
+          this._pushService.joinRoom(this.albumAboutToJoin['_id'], this.albumAboutToJoin['name']);
         }
       },
       () => {

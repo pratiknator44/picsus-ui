@@ -91,4 +91,8 @@ export class APIService {
   leaveAlbumById(albumId: string) {
     return this._http.post(this.domain+APIvars.leave_album_by_id, {albumId}).pipe(take(1));
   }
+
+  getRooms() {
+    return this._http.get(this.domain+APIvars.get_user_rooms).pipe(take(1));
+  }
 }

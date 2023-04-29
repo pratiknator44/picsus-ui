@@ -86,12 +86,12 @@
           <ion-button class="mt-2" (click)="pasteLink(true)" [disabled]="joinAlbum.isVerifying">Paste Link</ion-button>
         </div>
         <ion-spinner name="crescent" *ngIf="joinAlbum.isVerifying && !joinAlbum.confirmJoin"></ion-spinner>
-        <div *ngIf="albumAboutToJoin">
-          <div class="text-black">You're about to join</div>
+        <div *ngIf="albumAboutToJoin" class="text-black">
+          <div>You're about to join</div>
           <h2>{{albumAboutToJoin?.name}}</h2>
           <h5 class="m-0">{{albumAboutToJoin?.createdDate | date: 'MMMM dd, yyyy'}}</h5>
 
-          <ion-button (click)="pasteLink()" [disabled]="joinAlbum.isVerifying">Confirm &nbsp; <ion-spinner
+          <ion-button (click)="pasteLink()" [disabled]="joinAlbum.isVerifying">Confirm<ion-spinner
               name="crescent" *ngIf="joinAlbum.isVerifying"></ion-spinner></ion-button><ion-button fill="outline"
             (click)="joinAlbumModal.dismiss(); joinAlbum.isVerifying = false; joinAlbum.confirmJoin = false; albumAboutToJoin = null">Cancel</ion-button>
 

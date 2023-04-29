@@ -1,6 +1,4 @@
 import { Injectable } from "@angular/core";
-import { Router } from "@angular/router";
-
 // provided in root
 @Injectable()
 export class StorageService {
@@ -8,7 +6,6 @@ export class StorageService {
   user;
   constructor() {
     this.user = JSON.parse(localStorage.getItem('user'));
-
   }
 
   saveUser(user) {
