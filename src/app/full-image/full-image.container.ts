@@ -7,7 +7,7 @@ import { take } from "rxjs/operators";
 import { APIvars } from "../enums/apivars.enum";
 import { Filesystem, Directory } from "@capacitor/filesystem";
 import { APIService } from "../services/api.service";
-import { IExifSubObject, IImageData } from "./image-data.interface";
+import { IImageData } from "./image-data.interface";
 import { DOMService } from "../services/dom.services";
 
 @Component({
@@ -53,12 +53,64 @@ export class FullImageComponent implements OnInit {
 
 
     async downloadImage() {
+        // try {
+        //     this._domService.usePhotoGallery(APIvars.domain + '/media/' + this.photoId);
+        //     (await this._toastController.create({ message: "no error", duration: 4000 })).present();
+        // } catch (e) {
+        //     (await this._toastController.create({ message: JSON.stringify(e), duration: 4000 })).present();
+        // }
         try {
-            this._domService.usePhotoGallery(APIvars.domain + '/media/' + this.photoId);
-            (await this._toastController.create({ message: "no error", duration: 4000 })).present();
-        } catch (e) {
-            (await this._toastController.create({ message: JSON.stringify(e), duration: 4000 })).present();
+            console.log("downloading image from ", (APIvars.domain + '/media/' + this.photoId));
+            this._http.get(APIvars.domain + '/media/' + this.photoId, { responseType: 'blob' }).pipe(take(1)).subscribe(async res => {
+
+                // covert to base64
+                const base64Data = await this.convertBlobToBase64(res) as string;
+
+                // create folder if not present
+                try {
+
+
+                    const mkdir = await Filesystem.mkdir({
+                        path: 'Picsus',
+                        directory: Directory.Documents,
+                        recursive: false
+                    });
+                }
+                catch (e) { }
+                // save file
+                const saveFile = await Filesystem.writeFile({
+                    path: 'Picsus/' + this.photoId,
+                    data: base64Data,
+                    directory: Directory.Documents
+                });
+
+                console.log(saveFile);
+
+                (await this._toastController.create({
+                    message: "docs " + JSON.stringify(saveFile),
+                    duration: 2000
+                })).present();
+            });
+
         }
+        catch (e) {
+            (await this._toastController.create({
+                message: "failed save " + JSON.stringify(e),
+                duration: 2000
+            })).present();
+        }
+
+    }
+
+    convertBlobToBase64(blob: Blob) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader;
+            reader.onerror = reject;
+            reader.onload = () => {
+                resolve(reader.result);
+            };
+            reader.readAsDataURL(blob);
+        });
     }
 
 

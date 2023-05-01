@@ -21,6 +21,7 @@ export class UploadComponent implements OnInit, ViewWillEnter {
     selectedFiles: File[];
     uploadProgress = [];
     promises = [];
+    promisesCompleted = 0;
 
     constructor(
         private _activeRoute: ActivatedRoute,
@@ -62,13 +63,7 @@ export class UploadComponent implements OnInit, ViewWillEnter {
     }
 
     uploadImageToServer() {
-        console.log(this._storageService.user.fname);       
         this.uploadQueue(this.albumId, this.selectedFiles);
-        this._pushService.notifyUploading({
-            albumName: this.albumName, 
-            albumId: this.albumId,
-            senderName: this._storageService.user.fname ?? this._storageService.user.lname
-        });
     }
 
 
@@ -77,15 +72,28 @@ export class UploadComponent implements OnInit, ViewWillEnter {
             const len = fileQueue.length;
             this.uploadProgress = [];
             this.promises = [];
-
+            this.promisesCompleted = 0;
             for (let x = 0; x < len; x++) {
                 this.uploadProgress[x] = 0;
 
                 this.promises[x] = this._apiService.saveSingleImage(albumId, fileQueue[x], true)
                     .subscribe((res: HttpEvent<any>) => {
-                        // console.log(res);
+
                         if (res.type === HttpEventType.UploadProgress) {
                             this.uploadProgress[x] = res.loaded * 100 / res.total;
+                        }
+                        else if (res.type === HttpEventType.Response) {
+                            ++this.promisesCompleted;
+
+                            // on all photo uploads, send data to socket
+                            if (this.promisesCompleted === this.promises.length) {
+                                this._pushService.notifyUploading(
+                                    this.albumId,
+                                    this.albumName,
+                                    this._storageService.user.fname ?? this._storageService.user.lname
+                                );
+                                console.log("app promises done");
+                            }
                         }
                     });
 

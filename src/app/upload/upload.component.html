@@ -17,7 +17,7 @@
     <span *ngIf="selectedImagesSrc?.length === 0">No file selected yet</span>
     <br>
 
-    <h3>People in this gallery</h3>
+    <h3>Uploading {{promisesCompleted + ' / ' + promises?.length}}</h3>
     <ion-item *ngFor="let src of selectedImagesSrc; let i = index">
       <ion-avatar slot="start">
         <img [alt]="" [src]="src" />

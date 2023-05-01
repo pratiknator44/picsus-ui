@@ -7,5 +7,6 @@ export enum PushEventNames {
     UPLOADING_IN_PROGRESS = 'uploading-in-progress',
     DISCONNECTION = 'disconnection',
     REGISTER_SOCKET = 'register-socket',
-    JOIN_SUBSCRIBED_ROOMS = 'join-subscribed-rooms'
+    JOIN_SUBSCRIBED_ROOMS = 'join-subscribed-rooms',
+    PROMOTIONAL = 'promo'
 }

@@ -2,7 +2,8 @@ import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { APIService } from '../services/api.service';
-import {Subscription} from 'rxjs';
+import { Subscription } from 'rxjs';
+import { PushService } from '../services/push.service';
 @Component({
   selector: 'app-album-page',
   templateUrl: './album-contents.page.html',
@@ -14,9 +15,13 @@ export class AlbumContentsPage implements OnInit, AfterViewInit, OnDestroy {
   images;
   selectedImage: number;
   showImageMode: boolean;
-  queryParamObservable = new  Subscription();
+  queryParamObservable = new Subscription();
+  refreshContentSub: Subscription;
 
-  constructor(private _activeRoute: ActivatedRoute, private _apiService: APIService, private _router: Router) {
+  constructor(private _activeRoute: ActivatedRoute,
+    private _apiService: APIService,
+    private _router: Router,
+    private _pushService: PushService) {
     this.queryParamObservable = this._activeRoute.queryParams.subscribe(res => {
       if (res['imageId']) {
         this.showImageMode = true;
@@ -33,7 +38,14 @@ export class AlbumContentsPage implements OnInit, AfterViewInit, OnDestroy {
         this._router.navigate(['/tabs/tab3']);
       }
       this.album = JSON.parse(res['album']);
-    })
+    });
+
+    this.refreshContentSub = this._pushService.refreshAlbumContents.subscribe(albumId => {
+      console.log("refresing ", albumId, this.album._id);
+      if (albumId === this.album._id) {
+        this.getAllImagesByAlbumId();
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -61,14 +73,15 @@ export class AlbumContentsPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   routeToUploadByAlbum() {
-    this._router.navigate(['upload'], {relativeTo: this._activeRoute, queryParams: {albumName: this.album.name}});
+    this._router.navigate(['upload'], { relativeTo: this._activeRoute, queryParams: { albumName: this.album.name } });
   }
 
   routeToInfo() {
-    this._router.navigate(['edit'], {relativeTo: this._activeRoute});
+    this._router.navigate(['edit'], { relativeTo: this._activeRoute });
   }
 
   ngOnDestroy() {
     this.queryParamObservable.unsubscribe();
+    this.refreshContentSub.unsubscribe();
   }
 }

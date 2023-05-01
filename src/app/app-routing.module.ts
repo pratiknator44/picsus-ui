@@ -11,7 +11,11 @@ const routes: Routes = [
     path: '',
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule),
     canActivate: [LoggedInGuardService]
-  },{
+  }, {
+    path: 'about',
+    loadChildren:  () => import('./about/about.module').then(m => m.AboutModule)
+  },
+  {
     path: 'login',
     component: LoginComponent
   },
@@ -21,10 +25,10 @@ const routes: Routes = [
   }, {
     path: '',
     component: TabsPage
-  },{
+  }, {
     path: 'not-found',
     component: NotFoundComponent
-  },{
+  }, {
     path: '**',
     component: NotFoundComponent
   },
@@ -38,4 +42,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

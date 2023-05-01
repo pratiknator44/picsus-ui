@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Directory, Filesystem } from '@capacitor/filesystem';
 import { ToastController, ViewDidEnter } from '@ionic/angular';
-
+import { LocalNotifications } from '@capacitor/local-notifications';
+import { PushService } from '../services/push.service';
 
 @Component({
   selector: 'app-tab2',
@@ -64,21 +65,17 @@ export class Tab2Page implements OnInit, ViewDidEnter {
       }
     ]
   }
-  constructor(private _toastCtrl: ToastController) {
-    
+  constructor(private _toastCtrl: ToastController, private _pushService: PushService) {
+
   }
 
   async ngOnInit() {
-    this.loadContent(Directory.Cache);
   }
-
-
   ionViewDidEnter(): void {
     this.loadContent;
   }
 
   async loadContent(content: Directory) {
-    this.contents;
     try {
       // this.contents = JSON.stringify(await Filesystem.readdir({
       //   directory: content,
@@ -107,7 +104,18 @@ export class Tab2Page implements OnInit, ViewDidEnter {
     } catch (error) {
       console.error(error);
     }
-  };
+  }
+
+  async showNotif() {
+    try {
+      this._pushService.showLocalNotification('Hello from Picsus', 'please feedback send kare');
+    } catch (e) {
+      (await this._toastCtrl.create({
+        message: JSON.stringify(e),
+        duration: 5000
+      })).present();
+    }
+  }
 
   cache() { this.loadContent(Directory.Cache) }
   lib() { this.loadContent(Directory.Library) }
