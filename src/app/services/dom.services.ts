@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Directory, Filesystem } from "@capacitor/filesystem";
 import { LoadingController, ToastController } from "@ionic/angular";
 import { Clipboard } from '@capacitor/clipboard';
+import { Observable, Subject } from "rxjs";
 
 // this class helps in setting common DOM elements like ion-loading etc.
 @Injectable({
@@ -10,8 +11,16 @@ import { Clipboard } from '@capacitor/clipboard';
 export class DOMService {
 
   loading;
+
+  // makes tabs visible/invisible on the go
+  hideTabs: Subject<boolean>;
+  hideTabsOb: Observable<boolean>;
+
   constructor(public loadingController: LoadingController,
-    private _toastController: ToastController) { }
+    private _toastController: ToastController) {
+      this.hideTabs = new Subject();
+      this.hideTabsOb = this.hideTabs.asObservable();
+    }
 
   async presentLoading(message = 'Please wait...') {
     this.loading = await this.loadingController.create({
@@ -75,7 +84,6 @@ export class DOMService {
         position: 'top'
       })).present();
     }
-
   }
 
 }

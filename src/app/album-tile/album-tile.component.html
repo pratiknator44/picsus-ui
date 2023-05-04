@@ -1,7 +1,9 @@
-<div class="tile-container ion-activatable ripple-parent">
+<div class="tile-container ion-activatable ripple-parent"
+    [ngStyle]="{'background-image':  albumData?.firstImg ? 
+    'url('+('media/'+ albumData?.firstImg | addDomain)+')' : 'linear-gradient(90deg, grey, white)'}">
     <ion-ripple-effect></ion-ripple-effect>
-    <div style="overflow: hidden;">
-        <div class="heading">{{ albumData?.name }}</div>
+    <div>
+        <div class="heading"><span>{{ albumData?.name }}</span></div>
         <div class="space-left">{{ albumData?.description }}</div>
     </div>
 </div>

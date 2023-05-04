@@ -1,5 +1,5 @@
 .tile-container {
-    background-color: steelblue;
+    background-color: transparent;
     height: 6rem;
     width: calc(100% - 1rem);
     border-radius: 0.5rem;
@@ -7,13 +7,20 @@
     margin-right: auto;
     margin-bottom: 0.25rem;
     display: flex;
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .heading {
-    color: white;
     padding: 1rem;
     padding-bottom: 0;
     font-size: 1.5rem;
+    span {
+        background-color: white;
+        color: black
+    }
 }
 
 .space-left {
@@ -24,7 +31,6 @@
     font-size: 0.75rem;
 }
 
-.tile-container > div:first-child {
+.tile-container>div:first-child {
     width: 75%;
-    background-color: aqua;
 }

@@ -20,6 +20,7 @@ import { AlbumContentsPage } from "./album-contents.page";
         PipesModule,
         UploadModule,
         AlbumEditModule,
+        PipesModule,
         RouterModule.forChild([
             {
                 path: ':id',

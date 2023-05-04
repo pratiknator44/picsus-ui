@@ -1,14 +1,17 @@
 <ng-template #albumContentTemplate>
   <ion-header [translucent]="true">
     <ion-toolbar color="primary">
-      <ion-title>
+      <ion-button fill="clear" slot="start" routerLink="/tabs/tab3">
+        <ion-icon style="color: white;" name="chevron-back-outline"></ion-icon></ion-button>
+      <ion-title class="pl-0">
         {{album?.name || 'Album id not found'}}
       </ion-title>
+      <ion-button slot="end" class="mr-2" id="join-album-modal-trigger" (click)="routeToInfo()"><ion-icon name="create-outline"></ion-icon></ion-button>
     </ion-toolbar>
   </ion-header>
 
   <ion-content [fullscreen]="true">
-    <ion-fab slot="fixed" vertical="top" horizontal="end" [edge]="true">
+    <ion-fab slot="fixed" vertical="bottom" horizontal="end" [edge]="true"  style="margin-bottom: 3rem;" >
       <ion-fab-button (click)="routeToUploadByAlbum()">
         <ion-icon name="add-outline"></ion-icon>
       </ion-fab-button>
@@ -17,29 +20,23 @@
 
     <div class="album-info-container">
       <div class="dp-container w-25 m-2">
-        <img  src="http://localhost:3000/media/1681299820604.jpeg" class="circle" />
+        <img [src]="firstImage || '' | addDomain: 'jpg'" class="circle" />
       </div>
 
       <div class="album-info" (click)="routeToInfo()">
         <h2>{{album?.name}}</h2>
         <div>{{album?.media?.length}} Photos | {{album?.contributors?.length}} contributors</div>
         <div class="">Created on {{album?.createdDate | date: 'MMM dd, yyyy'}}</div>
-        <ion-button size="small" (click)="routeToInfo()">Gallery Info</ion-button>
       </div>
     </div>
     <div class="album-photos-container">
       <ion-label *ngIf="images?.length === 0">This album is empty</ion-label>
       <div class="photo-tile" (click)="selectedImage = i; showFullImage(image)"
-        *ngFor="let image of images; let i = index" [ngClass]="{'selected-image': selectedImage === i}">
-        <img class="w-100 h-100" [src]="('media/_'+image) | addDomain: 'jpg'" alt="no preview" />
+        *ngFor="let image of images; let i = index"
+        [ngClass]="{'selected-image': selectedImage === i}"
+        [ngStyle]="{'background-image': 'url('+('media/_'+image | addDomain: 'jpg')+')'}">
       </div>
     </div>
-
-    <!-- <ion-modal [isOpen]="isModalOpen">
-      hello there!
-      <ion-router-outlet></ion-router-outlet>
-      
-    </ion-modal> -->
   </ion-content>
 </ng-template>
 

@@ -4,6 +4,7 @@ import { take } from 'rxjs/operators';
 import { APIService } from '../services/api.service';
 import { Subscription } from 'rxjs';
 import { PushService } from '../services/push.service';
+import { APIvars } from '../enums/apivars.enum';
 @Component({
   selector: 'app-album-page',
   templateUrl: './album-contents.page.html',
@@ -17,6 +18,7 @@ export class AlbumContentsPage implements OnInit, AfterViewInit, OnDestroy {
   showImageMode: boolean;
   queryParamObservable = new Subscription();
   refreshContentSub: Subscription;
+  firstImage: string;
 
   constructor(private _activeRoute: ActivatedRoute,
     private _apiService: APIService,
@@ -41,7 +43,6 @@ export class AlbumContentsPage implements OnInit, AfterViewInit, OnDestroy {
     });
 
     this.refreshContentSub = this._pushService.refreshAlbumContents.subscribe(albumId => {
-      console.log("refresing ", albumId, this.album._id);
       if (albumId === this.album._id) {
         this.getAllImagesByAlbumId();
       }
@@ -58,6 +59,7 @@ export class AlbumContentsPage implements OnInit, AfterViewInit, OnDestroy {
     this._apiService.getAlbumContents(this.album._id).then(res => {
       this.images = res['thumbs'];
       this.selectedImage = 0;
+      this.firstImage = '/media/_'+ this.images[this.images.length - 1];
     }, (e) => {
       this.images = [];
       console.log('got error ', e);

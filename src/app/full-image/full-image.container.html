@@ -1,4 +1,4 @@
-<div class="image-container w-100 position-relative" style="height: 92vh;">
+<div class="image-container w-100 w-100 position-relative" style="height: 100vh;">
     <img [src]="('media/_'+photoId) | addDomain : 'jpg'" class="w-100" />
     <img [src]="('media/'+photoId) | addDomain" class="w-100 position-absolute" (load)="imageLoaded = true" />
 
@@ -6,17 +6,21 @@
         <ion-progress-bar type="indeterminate" *ngIf="!imageLoaded"></ion-progress-bar>
         <div class="d-flex flex-wrap h-100">
             <div class="ion-activatable ripple-parent text-center" id="open-modal" (click)="getInfo()">
-                <ion-icon name="information-circle"></ion-icon>
+                <ion-icon name="information-circle-outline"></ion-icon>
                 <ion-ripple-effect></ion-ripple-effect>
             </div>
 
             <div class="ion-activatable ripple-parent text-center" (click)="downloadImage()">
-                <ion-icon name="download"></ion-icon>
+                <ion-icon name="download-outline"></ion-icon>
+                <ion-ripple-effect></ion-ripple-effect>
+            </div>
+            <div class="ion-activatable ripple-parent text-center" *ngIf="false" (click)="deleteImage()">
+                <ion-icon name="trash-outline"></ion-icon>
                 <ion-ripple-effect></ion-ripple-effect>
             </div>
 
             <div class="ion-activatable ripple-parent text-center" (click)="goBack()">
-                <ion-icon name="close-outline"></ion-icon>
+                <ion-icon name="chevron-back-outline"></ion-icon>
                 <ion-ripple-effect></ion-ripple-effect>
             </div>
         </div>
@@ -28,12 +32,12 @@
     <ng-template>
         <ion-header [translucent]="true">
             <ion-toolbar color="primary">
-              <ion-title>
-                {{imageData?.filename}}
-              </ion-title>
-              <!-- <ion-button slot="end" class="mr-2" (click)="logout()"><ion-icon name="power-outline"></ion-icon></ion-button> -->
+                <ion-title>
+                    {{imageData?.filename}}
+                </ion-title>
+                <!-- <ion-button slot="end" class="mr-2" (click)="logout()"><ion-icon name="power-outline"></ion-icon></ion-button> -->
             </ion-toolbar>
-          </ion-header>
+        </ion-header>
         <ion-grid class="w-100 text-black">
             <ion-row>
                 <ion-col size="6">
@@ -79,7 +83,7 @@
                 </ion-col>
             </ion-row>
 
-            <ion-row *ngIf="imageData?.exif?.image" >
+            <ion-row *ngIf="imageData?.exif?.image">
                 <ion-col size="6">
                     Device & Model
                 </ion-col>

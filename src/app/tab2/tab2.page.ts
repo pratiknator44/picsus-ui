@@ -108,7 +108,7 @@ export class Tab2Page implements OnInit, ViewDidEnter {
 
   async showNotif() {
     try {
-      this._pushService.showLocalNotification('Hello from Picsus', 'please feedback send kare');
+      this._pushService.showLocalNotification('My App', 'Your update is ready');
     } catch (e) {
       (await this._toastCtrl.create({
         message: JSON.stringify(e),

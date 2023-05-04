@@ -1,6 +1,6 @@
 @import '../../theme/variables.scss';
 
-$width-per-pic: calc(100vh / 5);
+$width-per-pic: calc(100vw / 3);
 
 .album-info-container {
     display: flex;
@@ -37,9 +37,12 @@ $width-per-pic: calc(100vh / 5);
     align-items: center;
 
     .photo-tile {
-        height: 4rem;
-        width: 4rem;
+        height: $width-per-pic;
+        width: $width-per-pic;
         overflow: hidden;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 
 

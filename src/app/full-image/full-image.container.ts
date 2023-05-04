@@ -1,8 +1,8 @@
 import { Location } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
-import { Component, Input, OnInit, ViewChild } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit, AfterViewInit, ViewChild } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { IonModal, ToastController } from "@ionic/angular";
+import { IonModal, ToastController, ViewDidEnter, ViewDidLeave, ViewWillLeave } from "@ionic/angular";
 import { take } from "rxjs/operators";
 import { APIvars } from "../enums/apivars.enum";
 import { Filesystem, Directory } from "@capacitor/filesystem";
@@ -15,7 +15,7 @@ import { DOMService } from "../services/dom.services";
     templateUrl: 'full-image.container.html',
     styleUrls: ['full-image.container.scss']
 })
-export class FullImageComponent implements OnInit {
+export class FullImageComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @Input() photoId;
     @ViewChild('imageInfoModal') imageInfoModal: IonModal;
@@ -51,14 +51,19 @@ export class FullImageComponent implements OnInit {
         }
     }
 
+    ngAfterViewInit(): void {
+        this._domService.hideTabs.next(true);
+    }
+
+
+    getPhotoDetails() {
+        this._apiService.getImageInfo(this.photoId).subscribe(res => {
+
+        });
+    }
+
 
     async downloadImage() {
-        // try {
-        //     this._domService.usePhotoGallery(APIvars.domain + '/media/' + this.photoId);
-        //     (await this._toastController.create({ message: "no error", duration: 4000 })).present();
-        // } catch (e) {
-        //     (await this._toastController.create({ message: JSON.stringify(e), duration: 4000 })).present();
-        // }
         try {
             console.log("downloading image from ", (APIvars.domain + '/media/' + this.photoId));
             this._http.get(APIvars.domain + '/media/' + this.photoId, { responseType: 'blob' }).pipe(take(1)).subscribe(async res => {
@@ -68,8 +73,6 @@ export class FullImageComponent implements OnInit {
 
                 // create folder if not present
                 try {
-
-
                     const mkdir = await Filesystem.mkdir({
                         path: 'Picsus',
                         directory: Directory.Documents,
@@ -133,5 +136,9 @@ export class FullImageComponent implements OnInit {
 
     goBack() {
         this._router.navigate([], { relativeTo: this._activeRoute, queryParams: { imageId: null } });
+    }
+
+    ngOnDestroy(): void {
+        this._domService.hideTabs.next(false);
     }
 }
