@@ -9,7 +9,7 @@ export class AddDomainPipe implements PipeTransform {
     transform(word: string, extension?: string) {
 
         if(extension) {
-            word = word.split('.')[0]+'.'+extension;
+            word = word?.split('.')[0]+'.'+extension;
         }
         return APIvars.domain + '/' + word;
     }

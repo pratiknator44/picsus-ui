@@ -8,5 +8,6 @@ export enum PushEventNames {
     DISCONNECTION = 'disconnection',
     REGISTER_SOCKET = 'register-socket',
     JOIN_SUBSCRIBED_ROOMS = 'join-subscribed-rooms',
-    PROMOTIONAL = 'promo'
+    PROMOTIONAL = 'promo',
+    REFRESH_CONTENT = 'refresh-content'
 }

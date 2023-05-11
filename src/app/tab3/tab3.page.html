@@ -8,7 +8,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" >
   <ion-progress-bar type="indeterminate" *ngIf="refreshingAlbums"></ion-progress-bar>
   <ion-fab id="open-new-lib-modal" slot="fixed" vertical="bottom" horizontal="end" [edge]="true"
     style="margin-bottom: 3rem;" (click)="routeToNewGalleryWizard()">
@@ -19,12 +19,13 @@
 
   <br>
   <ion-label *ngIf="albums?.length === 0">No Albums found</ion-label>
-  <ion-label *ngIf="error">{{error}}</ion-label>
+  <ion-label *ngIf="error">{{error | json}}</ion-label>
   <a style="text-decoration: none;" *ngFor="let album of albums" ion-long-press [interval]="400"
     (longPressed)="showModalButton.click(); selectedAlbum = album"
     [routerLink]="['album/'+album?._id, {album: album?.stringify}]">
     <pi-album-tile [albumData]="album"></pi-album-tile>
   </a>
+  
 
   <button id="open-custom-dialog" class="d-none" #showModalButton></button>
 

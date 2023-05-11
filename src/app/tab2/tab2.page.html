@@ -1,23 +1,25 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
     <ion-title>
-      Notification Area
+      Developer Testing (Alpha)
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-<!-- 
-  contents: {{contents | json }}
+  <ion-button (click)="showNotif()">Register Notification</ion-button>
+
+  <hr>
+
   <input type="text" [(ngModel)]="contents" />
+  contents: {{contents | json }}
   <br><br>
-  <ion-button (click)="cache()">Cache</ion-button>
+  <!-- <ion-button (click)="cache()">Cache</ion-button>
   <ion-button (click)="data()">Data</ion-button>
-  <ion-button (click)="doc()">Document</ion-button>
+  <ion-button (click)="doc()">Document</ion-button> 
   <ion-button (click)="lib()">Library</ion-button>
   <ion-button (click)="ext()">External</ion-button>
   <ion-button (click)="extStorage()">External Storage</ion-button>
-
-  <br><Br> -->
-    <ion-button (click)="showNotif()">Register Notification</ion-button>
+   -->
+   <ion-button (click)="watchCameraFolder()">Watch Cam Folder</ion-button>
 </ion-content>

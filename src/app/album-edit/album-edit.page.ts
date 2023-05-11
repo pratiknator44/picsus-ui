@@ -1,10 +1,8 @@
 import { Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IonModal, ToastController } from '@ionic/angular';
-import { APIvars } from '../enums/apivars.enum';
+import { IonModal, NavController, ToastController } from '@ionic/angular';
 import { APIService } from '../services/api.service';
-import { Clipboard } from '@capacitor/clipboard';
 import { StorageService } from '../services/storage.service';
 import { PushService } from '../services/push.service';
 import { DOMService } from '../services/dom.services';
@@ -13,7 +11,7 @@ import { DOMService } from '../services/dom.services';
     templateUrl: 'album-edit.page.html',
     styleUrls: ['album-edit.page.scss']
 })
-export class AlbumEditComponent implements OnInit {
+export class AlbumEditComponent {
 
     @Input() albumId;
     albumForm: FormGroup;
@@ -35,7 +33,8 @@ export class AlbumEditComponent implements OnInit {
         private _router: Router,
         private _storageService: StorageService,
         private _pushService: PushService,
-        private _domService: DOMService) {
+        private _domService: DOMService,
+        private _navCtrl: NavController) {
 
         this.albumForm = new FormGroup({
             name: new FormControl('', Validators.required),
@@ -49,14 +48,9 @@ export class AlbumEditComponent implements OnInit {
         });
     }
 
-
-    ngOnInit(): void {
-        console.log(this._storageService.user);
-    }
     getAlbumDetails(albumId) {
         this.isInfoLoading = true;
         this._apiService.getAlbumInfo(albumId).subscribe(res => {
-            console.log(res);
             this.album = res['album'];
             this.isCreator = this._storageService.user._id === this.album.creator;
 
@@ -98,7 +92,7 @@ export class AlbumEditComponent implements OnInit {
     }
 
     getJoiningLink() {
-        this._domService.getJoiningLink(this.album.link, 'Joining Link copied to Clipboard');
+        this._domService.getJoiningLink(this.album.name, this.album.link, 'Joining Link copied to Clipboard');
     }
 
     async makeToast(message, color?, position: 'top' | 'middle' | 'bottom' = 'top') {
@@ -112,11 +106,11 @@ export class AlbumEditComponent implements OnInit {
     }
 
     async exitAlbum() {
-        
+
         this.exitingAlbum = true;
         this._apiService.leaveAlbumById(this.album._id).subscribe(res => {
-           this.afterExitOrDelete();
-           
+            this.afterExitOrDelete();
+
         }, (e) => {
             this.makeToast('Album exit error', JSON.stringify(e));
             this.exitingAlbum = false;
@@ -141,5 +135,9 @@ export class AlbumEditComponent implements OnInit {
         this.exitingAlbum = false;
         this._router.navigate(['tabs/tab3']);
         this.leaveAlbumModal.dismiss();
+    }
+
+    goBack() {
+        this._navCtrl.back();
     }
 }

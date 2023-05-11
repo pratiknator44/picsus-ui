@@ -5,6 +5,7 @@ import { APIService } from '../services/api.service';
 import { Clipboard } from '@capacitor/clipboard';
 import { PushService } from '../services/push.service';
 import { PushEventNames } from '../enums/push-events.enum';
+import { DOMService } from '../services/dom.services';
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
@@ -30,7 +31,8 @@ export class Tab3Page implements OnInit, ViewWillEnter {
   constructor(private _router: Router,
     private _apiService: APIService,
     private _toastController: ToastController,
-    private _pushService: PushService) { }
+    private _pushService: PushService,
+    private _domService: DOMService) { }
 
 
   ngOnInit() {
@@ -102,8 +104,8 @@ export class Tab3Page implements OnInit, ViewWillEnter {
       })).present();
       return;
     }
-
-    this._apiService.joinAlbumViaToken(this.joinAlbum.joinLink.value, showPresence).subscribe(
+    console.log(this.joinAlbum.joinLink.value.split("join=")[1]);
+    this._apiService.joinAlbumViaToken(this._domService.findSubstringBetween(this.joinAlbum.joinLink.value), showPresence).subscribe(
       res => {
         console.log(res);
         if (res['album']) { this.albumAboutToJoin = res['album']; }

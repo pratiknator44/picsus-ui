@@ -1,6 +1,6 @@
 .tile-container {
     background-color: transparent;
-    height: 6rem;
+    height: 8rem;
     width: calc(100% - 1rem);
     border-radius: 0.5rem;
     margin-left: auto;
@@ -21,6 +21,11 @@
         background-color: white;
         color: black
     }
+}
+
+.sub-heading {
+    padding-top: 0;
+    font-size: 1rem;
 }
 
 .space-left {

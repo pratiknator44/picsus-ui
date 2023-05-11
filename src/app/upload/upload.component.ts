@@ -1,7 +1,7 @@
 import { HttpEvent, HttpEventType, HttpProgressEvent } from "@angular/common/http";
 import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { AnimationController, ViewWillEnter } from "@ionic/angular";
+import { ToastController, ViewWillEnter } from "@ionic/angular";
 import { take } from "rxjs/operators";
 import { APIService } from "../services/api.service";
 import { MediaUploadService } from "../services/media-upload.service";
@@ -22,12 +22,18 @@ export class UploadComponent implements OnInit, ViewWillEnter {
     uploadProgress = [];
     promises = [];
     promisesCompleted = 0;
+    selectedImgSrc;
+    currentImageIndex;
 
     constructor(
         private _activeRoute: ActivatedRoute,
-        private _apiService: APIService,
+        private _router: Router,
+        private _route: ActivatedRoute,
+        private _mediaUploadService: MediaUploadService,
+        private _toastCtrl: ToastController,
         private _pushService: PushService,
-        private _storageService: StorageService) { }
+        private _storageService: StorageService,
+        private _apiService: APIService) { }
 
     ngOnInit() {
         this._activeRoute.params.pipe(take(1)).subscribe(res => {
@@ -47,10 +53,18 @@ export class UploadComponent implements OnInit, ViewWillEnter {
         this.selectedFiles = Object.values(fileEvent.target['files']) as File[];
         const len = this.selectedFiles.length;
 
+        async () => {
+            (await this._toastCtrl.create({
+                message: 'Your images are being uploaded, check notification bar for progress',
+                duration: 2000
+            })).present();
+        }
+
         for (let x = 0; x < len; x++) {
             this.makeImagePreviewSrcOf(this.selectedFiles[x]);
         }
-
+        this.uploadImageToServer();
+        // this._mediaUploadService.uploadImageToServer(this.albumId, this.albumName, this.selectedFiles);
     }
 
     makeImagePreviewSrcOf(file: File) {
@@ -58,6 +72,7 @@ export class UploadComponent implements OnInit, ViewWillEnter {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => {
+            // this is just for presenting what images are being uploaded, upload work is done by uploadQueue()
             this.selectedImagesSrc.push(reader.result as string);
         }
     }
@@ -80,7 +95,7 @@ export class UploadComponent implements OnInit, ViewWillEnter {
                     .subscribe((res: HttpEvent<any>) => {
 
                         if (res.type === HttpEventType.UploadProgress) {
-                            this.uploadProgress[x] = res.loaded * 100 / res.total;
+                            this.uploadProgress[x] = res.loaded / res.total;
                         }
                         else if (res.type === HttpEventType.Response) {
                             ++this.promisesCompleted;
@@ -92,7 +107,6 @@ export class UploadComponent implements OnInit, ViewWillEnter {
                                     this.albumName,
                                     this._storageService.user.fname ?? this._storageService.user.lname
                                 );
-                                console.log("app promises done");
                             }
                         }
                     });
@@ -115,5 +129,10 @@ export class UploadComponent implements OnInit, ViewWillEnter {
 
     routeToAlbumList() {
         // this._router.navigate(['/tabs/tab3']);
+    }
+
+    goBack() {
+        this._router.navigate(['..'], { relativeTo: this._route });
+
     }
 }

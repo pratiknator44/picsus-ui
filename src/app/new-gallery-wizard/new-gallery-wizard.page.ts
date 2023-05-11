@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoadingController, Platform, ViewDidEnter } from '@ionic/angular';
 import { APIService } from '../services/api.service';
 import { PushService } from '../services/push.service';
@@ -12,15 +12,19 @@ import { DOMService } from '../services/dom.services';
 })
 export class NewGalleryWizardPage implements ViewDidEnter {
 
+  todaysDate = new Date().toISOString().split('T')[0] + 'T00:00:00';
   newGalleryForm = new FormGroup({
-    name: new FormControl(null, Validators.required),
+    name: new FormControl(null, [Validators.required, Validators.minLength(1)]),
     description: new FormControl(),
+    startDate: new FormControl(this.todaysDate, Validators.required),
+    endDate: new FormControl(this.todaysDate),
     days: new FormControl(1, Validators.required),
     isClosed: new FormControl(false),
     poison: new FormControl()
   });
 
   creationRes: any;
+  textToCopy: string;
 
   constructor(private _platform: Platform,
     private _loader: LoadingController,
@@ -38,6 +42,8 @@ export class NewGalleryWizardPage implements ViewDidEnter {
     this.newGalleryForm = new FormGroup({
       name: new FormControl(null, Validators.required),
       description: new FormControl(),
+      startDate: new FormControl(new Date().toISOString().split('T')[0] + 'T00:00:00', Validators.required),
+      endDate: new FormControl(this.todaysDate),
       days: new FormControl(1, Validators.required),
       isClosed: new FormControl(false),
       poison: new FormControl()
@@ -45,22 +51,31 @@ export class NewGalleryWizardPage implements ViewDidEnter {
   }
 
   createAlbum() {
+    if (this.newGalleryForm.invalid) {
+      return;
+    }
     let loader;
     async () => {
       loader = this._loader.create({
         message: 'Creating Gallery',
       });
     }
+    this.newGalleryForm.patchValue({
+      startDate: this.newGalleryForm.controls['startDate'].value.split('+')[0] + '.000Z',
+      endDate: this.newGalleryForm.controls['endDate'].value.split('+')[0] + '.000Z'
+    });
 
-    this._apiService.createAlbum(this.newGalleryForm.value['name'], this.newGalleryForm.value['description']).then(res => {
+    this._apiService.createAlbum(this.newGalleryForm.value).then(res => {
       this.creationRes = res;
+      this.textToCopy = 'Here\'s the link for' +
+        this.creationRes['album']['name'] +
+        ' Album in Picsus: https://pics.us?join=' + this.creationRes['album']['link'] +
+        '=\n\n Copy the link and goto Galleries > Join > click Paste';
       this._pushService.joinRoom(this.creationRes['album']['_id'], this.creationRes['album']['name']);
     });
   }
 
   copyLink() {
-    this._domService.getJoiningLink(this.creationRes['album']['link'], 'Joining Link copied to Clipboard');
+    this._domService.getJoiningLink(this.textToCopy, 'Joining Link copied to Clipboard');
   }
-
-
 }

@@ -77,10 +77,10 @@ export class Tab2Page implements OnInit, ViewDidEnter {
 
   async loadContent(content: Directory) {
     try {
-      // this.contents = JSON.stringify(await Filesystem.readdir({
-      //   directory: content,
-      //   path: 'Pictures'
-      // }));
+      this.contents = JSON.stringify(await Filesystem.readdir({
+        directory: content,
+        path: 'Pictures'
+      }));
       this.contents = this.fakeData['files'];
       // detect changes:
       const regexp = new RegExp(/^[\w-]+\.(jpg|jpeg|png)$/, 'i');
@@ -97,12 +97,19 @@ export class Tab2Page implements OnInit, ViewDidEnter {
   async watchCameraFolder() {
     try {
       //get  camera path
-      const uri = await Filesystem.getUri({
-        path: 'DCIM/Camera',
-        directory: Directory.External
-      });
+
+      this.contents = JSON.stringify(await Filesystem.readdir({
+        path: 'Pictures',
+        directory: Directory.ExternalStorage
+      }));
+
     } catch (error) {
-      console.error(error);
+      console.error('error ',error);
+      this.contents = 'error', error;
+      (await this._toastCtrl.create({
+        message: 'error' +JSON.stringify(error),
+        duration: 5000
+      })).present();
     }
   }
 

@@ -9,6 +9,10 @@ import { PipesModule } from "../pipes/pipes.module";
 import { UploadComponent } from "../upload/upload.component";
 import { UploadModule } from "../upload/upload.module";
 import { AlbumContentsPage } from "./album-contents.page";
+import { IonicGestureConfig } from "../services/ionic-gesture-config";
+import { HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import { ExploreContainerComponentModule } from "../explore-container/explore-container.module";
+import { LongPressModule } from "ionic-long-press";
 
 @NgModule({
     declarations: [AlbumContentsPage],
@@ -21,6 +25,8 @@ import { AlbumContentsPage } from "./album-contents.page";
         UploadModule,
         AlbumEditModule,
         PipesModule,
+        LongPressModule,
+        ExploreContainerComponentModule,
         RouterModule.forChild([
             {
                 path: ':id',
@@ -34,6 +40,7 @@ import { AlbumContentsPage } from "./album-contents.page";
                 component: AlbumEditComponent
             }
         ])
-    ]
+    ],
+    providers: [{ provide: HAMMER_GESTURE_CONFIG, useClass: IonicGestureConfig }]
 })
 export class AlbumContentsPageModule { }

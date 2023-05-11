@@ -1,6 +1,7 @@
-<div class="image-container w-100 w-100 position-relative" style="height: 100vh;">
+<div class="image-container w-100 w-100 position-relative" style="height: 100vh;">\
+
     <img [src]="('media/_'+photoId) | addDomain : 'jpg'" class="w-100" />
-    <img [src]="('media/'+photoId) | addDomain" class="w-100 position-absolute" (load)="imageLoaded = true" />
+    <img [src]="('media/'+photoId) | addDomain" class="w-100 position-absolute" (load)="imageLoaded = true" zoom-pan />
 
     <div class="toolbar position-absolute">
         <ion-progress-bar type="indeterminate" *ngIf="!imageLoaded"></ion-progress-bar>
@@ -32,7 +33,10 @@
     <ng-template>
         <ion-header [translucent]="true">
             <ion-toolbar color="primary">
-                <ion-title>
+                <ion-button slot="start" fill="clear" (click)="closeImageInfoModal()">
+                    <ion-icon class="color-white" name="chevron-back-outline"></ion-icon>
+                </ion-button>
+                <ion-title class="pl-0">
                     {{imageData?.filename}}
                 </ion-title>
                 <!-- <ion-button slot="end" class="mr-2" (click)="logout()"><ion-icon name="power-outline"></ion-icon></ion-button> -->
@@ -48,9 +52,18 @@
                 </ion-col>
             </ion-row>
 
+            <ion-row>
+                <ion-col size="6">
+                    Size
+                </ion-col>
+                <ion-col size="6">
+                    {{(imageData?.size / 1048576) | number: '1.2-2' }} MB
+                </ion-col>
+            </ion-row>
+
             <ion-row *ngIf="imageData?.exif?.exif?.ExifImageHeight">
                 <ion-col size="6">
-                    Resolution
+                    Resolution (W x H)
                 </ion-col>
                 <ion-col size="6">
                     {{imageData?.exif?.exif?.ExifImageWidth}} x {{imageData?.exif?.exif?.ExifImageHeight}}
@@ -102,12 +115,8 @@
                 </ion-col>
             </ion-row>
         </ion-grid>
-        <div class="position-absolute modal-close-position w-100 text-center">
-            <ion-fab-button class="modal-close" (click)="closeImageInfoModal()">
-                <ion-icon name="close-circle"></ion-icon>
-            </ion-fab-button>
-
-        </div>
-
+        <ion-button class="m-3" (click)="closeImageInfoModal()">
+            Close
+        </ion-button>
     </ng-template>
 </ion-modal>

@@ -5,6 +5,8 @@ export class IAlbumInterface {
     creator: string;
     totalMedia?: string;
     totalContributors?: any;
+    startDate?: any;
+    endDate?: any;
     createdDate: string;
     isClosed?: boolean;
     days?: number;

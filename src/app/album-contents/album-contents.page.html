@@ -1,47 +1,76 @@
+<ion-header [translucent]="true" *ngIf="!showImageMode">
+  <ion-toolbar color="primary" class="large-title-fix">
+    <ion-button fill="clear" slot="start" routerLink="/tabs/tab3">
+      <ion-icon style="color: white;" name="chevron-back-outline"></ion-icon>
+    </ion-button>
+    <ion-title class="pl-0">
+      {{album?.name || 'Album id not found'}}
+    </ion-title>
+
+    <ion-button *ngIf="!deleteMode" fill="clear" slot="end" id="join-album-modal-trigger"
+      (click)="routeToInfo()"><ion-icon style="color: white" name="create-outline"></ion-icon>
+    </ion-button>
+
+    <ion-button color="danger" class="mr-2" *ngIf="deleteMode" slot="end" [disabled]="selectedImages.length===0"
+      (click)="deleteImages()">
+      <ion-icon style="color: white;" name="trash-outline"></ion-icon>
+    </ion-button>
+
+    <ion-button class="mr-2" slot="end" *ngIf="!deleteMode" (click)="enableDeleteMode()">
+      <ion-icon style="color: white" name="checkmark-done-outline"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [forceOverscroll]="true">
+  <ng-container [ngTemplateOutlet]="showImageMode? showImageTemplate : albumContentTemplate"></ng-container>
+</ion-content>
+
+
 <ng-template #albumContentTemplate>
-  <ion-header [translucent]="true">
-    <ion-toolbar color="primary">
-      <ion-button fill="clear" slot="start" routerLink="/tabs/tab3">
-        <ion-icon style="color: white;" name="chevron-back-outline"></ion-icon></ion-button>
-      <ion-title class="pl-0">
-        {{album?.name || 'Album id not found'}}
-      </ion-title>
-      <ion-button slot="end" class="mr-2" id="join-album-modal-trigger" (click)="routeToInfo()"><ion-icon name="create-outline"></ion-icon></ion-button>
-    </ion-toolbar>
-  </ion-header>
-
-  <ion-content [fullscreen]="true">
-    <ion-fab slot="fixed" vertical="bottom" horizontal="end" [edge]="true"  style="margin-bottom: 3rem;" >
-      <ion-fab-button (click)="routeToUploadByAlbum()">
-        <ion-icon name="add-outline"></ion-icon>
-      </ion-fab-button>
-    </ion-fab>
-    <!-- dp and album name and details-->
-
-    <div class="album-info-container">
-      <div class="dp-container w-25 m-2">
-        <img [src]="firstImage || '' | addDomain: 'jpg'" class="circle" />
-      </div>
-
-      <div class="album-info" (click)="routeToInfo()">
-        <h2>{{album?.name}}</h2>
-        <div>{{album?.media?.length}} Photos | {{album?.contributors?.length}} contributors</div>
-        <div class="">Created on {{album?.createdDate | date: 'MMM dd, yyyy'}}</div>
-      </div>
+  <div class="album-info-container">
+    <div class="dp-container w-25 m-2">
+      <img [src]="firstImage | addDomain: 'jpg'" class="circle" />
     </div>
-    <div class="album-photos-container">
-      <ion-label *ngIf="images?.length === 0">This album is empty</ion-label>
-      <div class="photo-tile" (click)="selectedImage = i; showFullImage(image)"
-        *ngFor="let image of images; let i = index"
-        [ngClass]="{'selected-image': selectedImage === i}"
-        [ngStyle]="{'background-image': 'url('+('media/_'+image | addDomain: 'jpg')+')'}">
-      </div>
+
+    <div class="album-info" (click)="routeToInfo()">
+      <h2>{{album?.name}}</h2>
+      <div>{{album?.totalMedia}} Photos | {{album?.totalContributors}} contributors</div>
+      <div class="">Created on {{album?.createdDate | date: 'MMM dd, yyyy'}}</div>
     </div>
-  </ion-content>
+  </div>
+  <div class="album-photos-container">
+    <ion-label *ngIf="images?.length === 0">This album is empty</ion-label>
+    <div class="photo-tile" (longPressed)="activateDeleteMode(image.filename)"
+      (click)="selectedImage = i; showFullImage(image.filename)" *ngFor="let image of images; let i = index"
+      [ngClass]="{'selected-image': selectedImage === i}"
+      [ngStyle]="{'background-image': 'url('+('media/_'+image.filename | addDomain: 'jpg')+')'}">
+
+      <!-- ion-long-press [interval]="400" -->
+      <!-- tick icon -->
+      <button class="select circle" *ngIf="deleteMode && userId === image.uploaderId"><ion-icon color="primary"
+          name="checkmark-circle" *ngIf="selectedImages.includes(image.filename)"></ion-icon></button>
+    </div>
+  </div>
+
+
+
+  <ion-fab *ngIf="!deleteMode" slot="fixed" vertical="bottom" horizontal="end" [edge]="true"
+    style="margin-bottom: 3rem;">
+    <ion-fab-button (click)="routeToUploadByAlbum()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-fab *ngIf="deleteMode" slot="fixed" vertical="bottom" horizontal="end" [edge]="true"
+    style="margin-bottom: 3rem;">
+    <ion-fab-button (click)="exitDeleteMode()" color="secondary">
+      <ion-icon name="close-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <!-- dp and album name and details-->
 </ng-template>
 
 <ng-template #showImageTemplate>
   <pi-full-image></pi-full-image>
 </ng-template>
-
-<ng-container [ngTemplateOutlet]="showImageMode? showImageTemplate : albumContentTemplate"></ng-container>

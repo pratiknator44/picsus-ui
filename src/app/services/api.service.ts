@@ -39,8 +39,13 @@ export class APIService {
 
   }
 
-  createAlbum(name, description) {
-    return this._http.post(this.domain + APIvars.create_album, { name, description }).toPromise();
+  createAlbum(formValues) {
+    return this._http.post(this.domain + APIvars.create_album, {
+      name: formValues.name,
+      description: formValues?.description,
+      startDate: formValues.startDate,
+      endDate: formValues?.endDate,
+    }).toPromise();
   }
 
   getAlbum() {
@@ -94,5 +99,9 @@ export class APIService {
 
   getRooms() {
     return this._http.get(this.domain+APIvars.get_user_rooms).pipe(take(1));
+  }
+
+  deleteImages(albumId: string, images: string[]) {
+    return this._http.post(this.domain+APIvars.delete_images, {albumId, images}).pipe(take(1));
   }
 }

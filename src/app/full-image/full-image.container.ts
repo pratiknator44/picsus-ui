@@ -1,4 +1,3 @@
-import { Location } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { Component, Input, OnDestroy, OnInit, AfterViewInit, ViewChild } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -61,7 +60,6 @@ export class FullImageComponent implements OnInit, AfterViewInit, OnDestroy {
 
         });
     }
-
 
     async downloadImage() {
         try {

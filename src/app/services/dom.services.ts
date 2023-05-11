@@ -65,11 +65,11 @@ export class DOMService {
   }
 
 
-  async getJoiningLink(textToCopy: string, toastMessage = 'Joining Link copied to Clipboard') {
+  async getJoiningLink(albumname: string, textToCopy: string, toastMessage = 'Joining Link copied to Clipboard') {
 
     try {
       await Clipboard.write({
-        string: textToCopy
+        string: 'Picsus joining link for '+albumname+': https://pics.us?join='+textToCopy+'=\n\n\nLong press the link to copy'
       });
       (await this._toastController.create({
         message: toastMessage,
@@ -84,6 +84,13 @@ export class DOMService {
         position: 'top'
       })).present();
     }
+  }
+
+  // = is a delimiter
+  findSubstringBetween(str, start = 'join=', end = '=') {
+    const regex = new RegExp(`${start}(.*?)${end}`);
+    const match = str.match(regex);
+    return match ? match[1] : null;
   }
 
 }

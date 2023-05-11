@@ -1,9 +1,11 @@
-<div class="tile-container ion-activatable ripple-parent"
-    [ngStyle]="{'background-image':  albumData?.firstImg ? 
-    'url('+('media/'+ albumData?.firstImg | addDomain)+')' : 'linear-gradient(90deg, grey, white)'}">
+<div class="tile-container ion-activatable ripple-parent" [ngStyle]="{'background-image':  albumData?.firstImg ? 
+    'url('+('media/_'+ albumData?.firstImg | addDomain : 'jpg')+')' : 'linear-gradient(90deg, grey, white)'}">
     <ion-ripple-effect></ion-ripple-effect>
     <div>
         <div class="heading"><span>{{ albumData?.name }}</span></div>
         <div class="space-left">{{ albumData?.description }}</div>
+        <div class="heading sub-heading" *ngIf="albumData?.startDate">
+            <span>{{albumData?.startDate | date: 'dd MMM, yyyy'}}</span>
+        </div>
     </div>
 </div>

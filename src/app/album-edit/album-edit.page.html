@@ -1,6 +1,9 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
-    <ion-title>
+    <ion-button fill="clear" slot="start" (click)="goBack()">
+      <ion-icon style="color: white;" name="chevron-back-outline"></ion-icon>
+    </ion-button>
+    <ion-title class="pl-0">
       Gallery Info/Edit
     </ion-title>
     <ion-button id="leave-album-modal-trigger" slot="end" class="mr-2" color="danger">{{isCreator? 'Delete' : 'Exit'}}</ion-button>
