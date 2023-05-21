@@ -22,7 +22,7 @@
   <ion-label *ngIf="error">{{error | json}}</ion-label>
   <a style="text-decoration: none;" *ngFor="let album of albums" ion-long-press [interval]="400"
     (longPressed)="showModalButton.click(); selectedAlbum = album"
-    [routerLink]="['album/'+album?._id, {album: album?.stringify}]">
+    (click)="gotoAlbumContents(album)">
     <pi-album-tile [albumData]="album"></pi-album-tile>
   </a>
   

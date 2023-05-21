@@ -46,9 +46,9 @@ $width-per-pic: calc(100vw / 3);
     }
 
 
-    .selected-image {
-        border: solid 2px #3880ff;
-    }
+    // .selected-image {
+    //     border: solid 2px #3880ff;
+    // }
 
     .select {
         position: absolute;
@@ -66,5 +66,35 @@ $width-per-pic: calc(100vw / 3);
     }
     .select-active {
         background-color: #3880ff;
+    }
+
+    .upload-in-progress {
+        // filter: grayscale(100%);
+    }
+}
+
+
+
+
+
+.text-grey {
+    color: #666;
+}
+
+
+ion-modal#downloading-modal {
+    --width: fit-content;
+    --min-width: 12rem;
+    --height: fit-content;
+    --border-radius: 6px;
+    --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+}
+
+#downloading-modal {
+    .wrapper {
+        padding: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: inherit;
     }
 }

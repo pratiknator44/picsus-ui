@@ -41,6 +41,7 @@ import { LongPressModule } from "ionic-long-press";
             }
         ])
     ],
-    providers: [{ provide: HAMMER_GESTURE_CONFIG, useClass: IonicGestureConfig }]
+    providers: [
+        { provide: HAMMER_GESTURE_CONFIG, useClass: IonicGestureConfig }]
 })
 export class AlbumContentsPageModule { }

@@ -1,11 +1,14 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Directive, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { APIService } from '../services/api.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { PushService } from '../services/push.service';
 import { StorageService } from '../services/storage.service';
-import { ToastController } from '@ionic/angular';
+import { IonModal, ToastController } from '@ionic/angular';
+import { MediaUploadService } from '../services/media-upload.service';
+import { Share } from '@capacitor/share';
+
 @Component({
   selector: 'app-album-page',
   templateUrl: './album-contents.page.html',
@@ -13,9 +16,10 @@ import { ToastController } from '@ionic/angular';
 })
 export class AlbumContentsPage implements OnInit, AfterViewInit, OnDestroy {
 
+  @ViewChild('downloadingModal', { static: true }) downloadingModal: IonModal;
+
   album;
   images;
-  selectedImage: number;
   showImageMode: boolean;
   queryParamObservable = new Subscription();
   refreshContentSub: Subscription;
@@ -23,49 +27,58 @@ export class AlbumContentsPage implements OnInit, AfterViewInit, OnDestroy {
   deleteMode = false;
   selectedImages = [];
   userId: string;
+  selectedImagesSrc = [];
+  userName: string;
+
+  // used to show files which gets uploaded during multiple upload
+  indexOfUploadedFiles = [];
 
   constructor(private _activeRoute: ActivatedRoute,
     private _apiService: APIService,
     private _router: Router,
     private _pushService: PushService,
     private _storageService: StorageService,
-    private _toastCtrl: ToastController) {
-
-    this.queryParamObservable = this._activeRoute.queryParams.subscribe(res => {
-      if (res['imageId']) {
-        this.showImageMode = true;
-      } else {
-        this.showImageMode = false;
-      }
-    });
+    private _toastCtrl: ToastController,
+    private _mediaUploadService: MediaUploadService) {
   }
 
   ngOnInit() {
-    this._activeRoute.params.pipe(take(1)).subscribe(res => {
-      if (!res['album']) {
-        this._router.navigate(['/tabs/tab3']);
+    console.log(this._activeRoute.snapshot.params.id);
+
+    this.queryParamObservable = this._activeRoute.queryParams.subscribe(async res => {
+      this.showImageMode = res['imageId'] ? true : false;
+
+      if (res['album']) {
+        this.album = JSON.parse(res['album']);
+        this.getAllImagesByAlbumId();
       }
-      this.album = JSON.parse(res['album']);
+      else {
+        this.album = (await this._apiService.getAlbumDetails(this._activeRoute.snapshot.params.id))['album'];
+        this.getAllImagesByAlbumId();
+      }
+
     });
 
+
+    // subscribe to album content update socket
     this.refreshContentSub = this._pushService.refreshAlbumContents.subscribe(albumId => {
       if (albumId === this.album._id) {
         this.getAllImagesByAlbumId();
       }
     });
-    this.userId = this._storageService.user._id;
+    this.userId = this._storageService?.user?._id;
+    this.userName = this._storageService?.user?.fname || this._storageService?.user?.lname;
   }
 
   ngAfterViewInit(): void {
-    this.getAllImagesByAlbumId();
+    if (this.album)
+      this.getAllImagesByAlbumId();
   }
 
 
   async getAllImagesByAlbumId() {
-
     this._apiService.getAlbumContents(this.album._id).then(res => {
       this.images = res['contents'];
-      this.selectedImage = 0;
       try {
         this.firstImage = 'media/_' + this.images[this.images.length - 1]['filename'];
       } catch { this.firstImage = '/app-images/generic.jpg'; }
@@ -118,7 +131,7 @@ export class AlbumContentsPage implements OnInit, AfterViewInit, OnDestroy {
   async enableDeleteMode() {
     this.deleteMode = true;
     this.selectedImages = [];
-    
+
     (await this._toastCtrl.create({
       message: 'Select images to delete',
       duration: 1500,
@@ -133,14 +146,77 @@ export class AlbumContentsPage implements OnInit, AfterViewInit, OnDestroy {
 
   async deleteImages() {
     if (this.selectedImages.length === 0) return;
-      (await this._toastCtrl.create({
-        message: 'Deleting ' + this.selectedImages.length + ' selections...',
-        duration: 1500
-      })).present();
+    (await this._toastCtrl.create({
+      message: 'Deleting ' + this.selectedImages.length + ' selections...',
+      duration: 1500
+    })).present();
 
     this._apiService.deleteImages(this.album._id, this.selectedImages).subscribe(res => {
       this.getAllImagesByAlbumId();
     });
     this.exitDeleteMode();
   }
+
+
+  uploadCompleteForFileIndexOb: Observable<{ uploadCompleteForFileIndex: number }>;
+
+  filesSelected(fileEvent: Event) {
+    const selectedFilesForUpload = Object.values(fileEvent.target['files']) as File[];
+    const len = selectedFilesForUpload.length;
+
+    this._mediaUploadService.notifyUploadSubject.asObservable().subscribe(index => {
+      this.selectedImagesSrc = this.selectedImagesSrc.slice(index.uploadCompleteForFileIndex + 1);
+      this.getAllImagesByAlbumId();
+    });
+    async () => {
+      (await this._toastCtrl.create({
+        message: 'Your images are being uploaded, check notification bar for progress',
+        duration: 2000
+      })).present();
+    }
+
+    for (let x = 0; x < len; x++) {
+      this.makeImagePreviewSrcOf(selectedFilesForUpload[x]);
+    }
+    // this.uploadImageToServer();
+    this._mediaUploadService.uploadImageToServer(this.album._id, selectedFilesForUpload);
+  }
+
+  makeImagePreviewSrcOf(file: File) {
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      // this is just for presenting what images are being uploaded, upload work is done by uploadQueue()
+      this.selectedImagesSrc.push(reader.result as string);
+    }
+  }
+
+  async shareImage() {
+    try {
+      await this.downloadingModal.present();
+
+      let fileURIs = [];
+      this.selectedImages.forEach(img =>
+        fileURIs.push(this._mediaUploadService.getLocalBinaryOfImage(img)));
+
+      fileURIs = (await Promise.all(fileURIs)).map(item => item.uri);
+      await this.downloadingModal.dismiss();
+
+      Share.share({
+        text: "Sent with ❤, from " + this.userName + ' via Picsus',
+        dialogTitle: "Share via",
+        files: fileURIs,
+      });
+    } catch (e) {
+
+      (await this._toastCtrl.create({
+        message: JSON.stringify(e),
+        color: 'danger',
+        duration: 4000
+      })).present();
+    }
+
+  };
+
 }

@@ -63,7 +63,7 @@ export class UploadComponent implements OnInit, ViewWillEnter {
         for (let x = 0; x < len; x++) {
             this.makeImagePreviewSrcOf(this.selectedFiles[x]);
         }
-        this.uploadImageToServer();
+        // this.uploadImageToServer();
         // this._mediaUploadService.uploadImageToServer(this.albumId, this.albumName, this.selectedFiles);
     }
 

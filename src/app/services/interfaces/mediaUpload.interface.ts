@@ -1,7 +1,7 @@
-import {Subscription} from 'rxjs';
+import { Subscription } from "rxjs";
 
 export interface IMediaInterface {
+    base64src?: string;
     uploadProgress?: number;
     uploadPromise?: Subscription;
-    base64src?: string
 }

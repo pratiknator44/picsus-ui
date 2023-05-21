@@ -53,8 +53,7 @@ export class APIService {
   }
 
   getAlbumDetails(albumId) {
-    const params = new HttpParams().set('albumId', albumId);
-    return this._http.get(this.domain + APIvars.get_album_details, {params}).toPromise();
+    return this._http.post(this.domain + APIvars.get_album_details, {albumId}).toPromise();
   }
 
   getAlbumContents(albumId) {

@@ -11,8 +11,9 @@
 
   <hr>
 
-  <input type="text" [(ngModel)]="contents" />
-  contents: {{contents | json }}
+  <!-- <input type="text" [(ngModel)]="contents" />
+  contents: {{contents | json }} -->
+  id = {{ id }}
   <br><br>
   <!-- <ion-button (click)="cache()">Cache</ion-button>
   <ion-button (click)="data()">Data</ion-button>
@@ -22,4 +23,5 @@
   <ion-button (click)="extStorage()">External Storage</ion-button>
    -->
    <ion-button (click)="watchCameraFolder()">Watch Cam Folder</ion-button>
+   <ion-button routerLink="/not-found">Goto 404 Not Found</ion-button>
 </ion-content>

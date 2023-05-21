@@ -27,14 +27,11 @@ const routes: Routes = [
     component: TabsPage
   }, {
     path: 'not-found',
-    component: NotFoundComponent
+    loadChildren:  () => import('./not-found/not-found.module').then(m => m.NotFoundModule)
   }, {
     path: '**',
-    component: NotFoundComponent
+    loadChildren:  () => import('./not-found/not-found.module').then(m => m.NotFoundModule)
   },
-  // {
-  //   path: 'server-error'
-  // },
 ];
 @NgModule({
   imports: [

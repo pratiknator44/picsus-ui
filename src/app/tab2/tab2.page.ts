@@ -3,6 +3,7 @@ import { Directory, Filesystem } from '@capacitor/filesystem';
 import { ToastController, ViewDidEnter } from '@ionic/angular';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { PushService } from '../services/push.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-tab2',
@@ -11,6 +12,7 @@ import { PushService } from '../services/push.service';
 })
 export class Tab2Page implements OnInit, ViewDidEnter {
 
+  id;
   selectedIndex;
   contents;
   fakeData = {
@@ -65,11 +67,11 @@ export class Tab2Page implements OnInit, ViewDidEnter {
       }
     ]
   }
-  constructor(private _toastCtrl: ToastController, private _pushService: PushService) {
-
+  constructor(private _toastCtrl: ToastController, private _pushService: PushService, private _activeRoute: ActivatedRoute) {
   }
 
   async ngOnInit() {
+    this.id = this._activeRoute.snapshot.paramMap.get('id');
   }
   ionViewDidEnter(): void {
     this.loadContent;

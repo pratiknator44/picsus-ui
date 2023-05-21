@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IonModal, ToastController, ViewWillEnter } from '@ionic/angular';
 import { APIService } from '../services/api.service';
 import { Clipboard } from '@capacitor/clipboard';
@@ -32,7 +32,8 @@ export class Tab3Page implements OnInit, ViewWillEnter {
     private _apiService: APIService,
     private _toastController: ToastController,
     private _pushService: PushService,
-    private _domService: DOMService) { }
+    private _domService: DOMService,
+    private _activeRoute: ActivatedRoute) { }
 
 
   ngOnInit() {
@@ -62,11 +63,7 @@ export class Tab3Page implements OnInit, ViewWillEnter {
   }
 
   gotoAlbum(album) {
-    this._router.navigate(['/tabs/tab3/album/' + album._id], album);
-  }
-
-  showModal(modalRef) {
-    console.log("active ");
+    this._router.navigate(['/tabs/tab3/album/' + album._id], { queryParams: { album } });
   }
 
   deleteAlbum() {
@@ -104,10 +101,10 @@ export class Tab3Page implements OnInit, ViewWillEnter {
       })).present();
       return;
     }
-    console.log(this.joinAlbum.joinLink.value.split("join=")[1]);
+
+
     this._apiService.joinAlbumViaToken(this._domService.findSubstringBetween(this.joinAlbum.joinLink.value), showPresence).subscribe(
       res => {
-        console.log(res);
         if (res['album']) { this.albumAboutToJoin = res['album']; }
 
         this.joinAlbum.confirmJoin = showPresence;
@@ -125,7 +122,8 @@ export class Tab3Page implements OnInit, ViewWillEnter {
       });
   }
 
-  onWillDismissNewLibraryModal(event) { }
-  confirm() { }
-  cancel() { }
+
+  gotoAlbumContents(album) {
+    this._router.navigate(['album/'+album._id],{ relativeTo: this._activeRoute,  queryParams: {album: JSON.stringify(album)}});
+  }
 }

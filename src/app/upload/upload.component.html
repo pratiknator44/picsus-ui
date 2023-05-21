@@ -46,14 +46,13 @@
 
 
     <ng-template #uploadTemplate>
-        Getting items ready to upload...
+        Your images are being uploaded. We'll notify others once they reach us
         <div class="upload-template d-flex">
             <!-- (click)="quickPhotoView.present(); selectedImgSrc = src; currentImageIndex = i" -->
             <div class="image-container position-relative mt-2" id="open-quick-view"
                 *ngFor="let src of selectedImagesSrc; let i = index" [ngStyle]="{'background-image': 'url('+src+')'}">
                 <ion-progress-bar class="position-absolute" [color]="uploadProgress[i] < 1 ? 'primary' : 'success'"
                     [value]="uploadProgress[i] || 0"></ion-progress-bar>
-                    {{uploadProgress[i] }}
             </div>
         </div>
     </ng-template>
