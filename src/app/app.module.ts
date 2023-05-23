@@ -19,31 +19,30 @@ import { LoggedInGuardService } from './services/loggedIn.guard';
 import { StorageService } from './services/storage.service';
 // import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
-  declarations: [AppComponent, LoginComponent, OtpComponent],
-  entryComponents: [],
-  imports: [
-    BrowserModule,
-    IonicModule.forRoot(),
-    AppRoutingModule,
-    CommonModule,
-    HttpClientModule,
-    FormsModule,
-  ],
-  providers: [
-    LoggedInGuardService,
-    StorageService,
-    {
-      provide: RouteReuseStrategy,
-      useClass: IonicRouteStrategy
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: TokenInterceptor,
-      multi: true
-    },
-    APIService,
-    CredentailService
-  ],
-  bootstrap: [AppComponent],
+    declarations: [AppComponent, LoginComponent, OtpComponent],
+    imports: [
+        BrowserModule,
+        IonicModule.forRoot(),
+        AppRoutingModule,
+        CommonModule,
+        HttpClientModule,
+        FormsModule,
+    ],
+    providers: [
+        LoggedInGuardService,
+        StorageService,
+        {
+            provide: RouteReuseStrategy,
+            useClass: IonicRouteStrategy
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: TokenInterceptor,
+            multi: true
+        },
+        APIService,
+        CredentailService
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

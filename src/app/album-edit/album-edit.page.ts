@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonModal, NavController, ToastController } from '@ionic/angular';
 import { APIService } from '../services/api.service';
@@ -14,7 +14,7 @@ import { DOMService } from '../services/dom.services';
 export class AlbumEditComponent {
 
     @Input() albumId;
-    albumForm: FormGroup;
+    albumForm: UntypedFormGroup;
     queryParamObservable;
     album;
     contributors = [];
@@ -36,9 +36,9 @@ export class AlbumEditComponent {
         private _domService: DOMService,
         private _navCtrl: NavController) {
 
-        this.albumForm = new FormGroup({
-            name: new FormControl('', Validators.required),
-            description: new FormControl()
+        this.albumForm = new UntypedFormGroup({
+            name: new UntypedFormControl('', Validators.required),
+            description: new UntypedFormControl()
         });
 
         this.queryParamObservable = this._activeRoute.params.subscribe(res => {

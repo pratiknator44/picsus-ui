@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { LoadingController, Platform, ViewDidEnter } from '@ionic/angular';
 import { APIService } from '../services/api.service';
 import { PushService } from '../services/push.service';
@@ -13,14 +13,14 @@ import { DOMService } from '../services/dom.services';
 export class NewGalleryWizardPage implements ViewDidEnter {
 
   todaysDate = new Date().toISOString().split('T')[0] + 'T00:00:00';
-  newGalleryForm = new FormGroup({
-    name: new FormControl(null, [Validators.required, Validators.minLength(1)]),
-    description: new FormControl(),
-    startDate: new FormControl(this.todaysDate, Validators.required),
-    endDate: new FormControl(this.todaysDate),
-    days: new FormControl(1, Validators.required),
-    isClosed: new FormControl(false),
-    poison: new FormControl()
+  newGalleryForm = new UntypedFormGroup({
+    name: new UntypedFormControl(null, [Validators.required, Validators.minLength(1)]),
+    description: new UntypedFormControl(),
+    startDate: new UntypedFormControl(this.todaysDate, Validators.required),
+    endDate: new UntypedFormControl(this.todaysDate),
+    days: new UntypedFormControl(1, Validators.required),
+    isClosed: new UntypedFormControl(false),
+    poison: new UntypedFormControl()
   });
 
   creationRes: any;
@@ -39,14 +39,14 @@ export class NewGalleryWizardPage implements ViewDidEnter {
 
   ionViewDidEnter(): void {
     this.creationRes = null;
-    this.newGalleryForm = new FormGroup({
-      name: new FormControl(null, Validators.required),
-      description: new FormControl(),
-      startDate: new FormControl(new Date().toISOString().split('T')[0] + 'T00:00:00', Validators.required),
-      endDate: new FormControl(this.todaysDate),
-      days: new FormControl(1, Validators.required),
-      isClosed: new FormControl(false),
-      poison: new FormControl()
+    this.newGalleryForm = new UntypedFormGroup({
+      name: new UntypedFormControl(null, Validators.required),
+      description: new UntypedFormControl(),
+      startDate: new UntypedFormControl(new Date().toISOString().split('T')[0] + 'T00:00:00', Validators.required),
+      endDate: new UntypedFormControl(this.todaysDate),
+      days: new UntypedFormControl(1, Validators.required),
+      isClosed: new UntypedFormControl(false),
+      poison: new UntypedFormControl()
     });
   }
 
