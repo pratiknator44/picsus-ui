@@ -1,0 +1,17 @@
+.devs {
+    text-align: center;
+    justify-content: center;
+    div {
+        height: fit-content;
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 50%;
+        overflow: hidden;
+        img {
+            height: 6rem;
+            width: 6rem;
+        }
+    }
+    
+}

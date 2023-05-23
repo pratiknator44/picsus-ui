@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController, ToastController } from '@ionic/angular';
 import { ImageCroppedEvent, LoadedImage } from 'ngx-image-cropper';
@@ -41,8 +41,6 @@ export class DpComponent implements OnInit {
   }
 
   async cropAndUpload() {
-    console.log("crop and upload init");
-    // if(this.flags.isDisabled) return;
     this.loader = await this._loadingController.create({
       message: 'Uploading...',
     });

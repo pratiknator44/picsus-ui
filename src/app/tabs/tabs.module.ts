@@ -9,7 +9,6 @@ import { TabsPage } from './tabs.page';
 import { DpComponent } from '../dp/dp.component';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { SettingMenuComponent } from '../settings/settings.component';
-import { FullImageModule } from '../full-image/full-image.module';
 
 @NgModule({
   imports: [

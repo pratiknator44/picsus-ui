@@ -1,26 +1,37 @@
 .image-container {
+    background-color: #111;
+    display: flex;
+}
+
+.image-container>img {
+    align-self: center;
 }
 
 .toolbar {
-    background-color: white;
+    // background: rgba($color: #FFF, $alpha: 0.3, $angle);
+    background-image: linear-gradient(0deg, #FFF, black, 0.4);
     border-radius: 5px;
     width: calc(100vw - 5vw);
     bottom: 1rem;
     height: 4rem;
     left: 2.5vw;
     cursor: pointer;
+
+    div>div {
+        font-size: 1.5rem;
+    }
 }
 
-.toolbar>div {
+.toolbar>div>div {
     height: 100%;
     border-radius: 1px black;
     font-size: 2rem;
     width: 33%;
 }
 
-.toolbar>div>ion-icon {
+.toolbar>div>div>ion-icon {
     margin-top: 1rem;
-    color: #666
+    color: white
 }
 
 .modal-close {
@@ -30,4 +41,46 @@
 .modal-close-position {
     bottom: 2rem;
     left: 50%;
+}
+
+.ripple-parent {
+    border-color: transparent;
+}
+
+
+ion-modal#downloading-modal, ion-modal#confirm-delete-modal {
+    --width: fit-content;
+    --min-width: 12rem;
+    --height: fit-content;
+    --border-radius: 6px;
+    --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+}
+
+ion-modal#confirm-delete-modal {
+    bottom: -20rem;
+}
+
+
+#downloading-modal {
+    .wrapper {
+        padding: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: inherit;
+    }
+}
+
+
+.top-toolbar {
+    right: 1rem;
+    top: 1rem;
+    color: white;
+    font-size: 2rem;
+}
+
+.top-left-toolbar {
+    left: 1rem;
+    top: 1rem;
+    color: white;
+    font-size: 2rem;
 }

@@ -1,137 +1,162 @@
-<div class="image-container w-100 h-100 position-relative">
-    <img src="" class="w-100" />
+<div class="image-container w-100 w-100 position-relative" style="height: 100vh;">\
 
-    <div class="toolbar position-absolute d-flex flex-wrap">
-        <ion-progress-bar type="indeterminate" *ngIf="imageLoaded"></ion-progress-bar>
+    <img [src]="('media/_'+photoId) | addDomain : 'jpg'" class="w-100" />
+    <img [src]="('media/'+photoId) | addDomain" class="w-100 position-absolute" (load)="imageLoaded = true" zoom-pan
+        (zoomState)="hideOptions = $event" />
 
-        <div class="ion-activatable ripple-parent text-center" id="open-modal" (click)="getInfo('myImageID')">
-            <ion-icon name="information-circle"></ion-icon>
+    <div class="top-left-toolbar position-absolute">
+        <div class="ion-activatable ripple-parent text-center" (click)="goBack()">
+            <ion-icon name="chevron-back-outline"></ion-icon>
             <ion-ripple-effect></ion-ripple-effect>
         </div>
+    </div>
 
-        <div class="ion-activatable ripple-parent text-center">
-            <ion-icon name="download"></ion-icon>
+    <div class="top-toolbar position-absolute" *ngIf="!hideOptions">
+        <div class="ion-activatable ripple-parent text-center" (click)="share()">
+            <ion-icon name="share-social-outline"></ion-icon>
             <ion-ripple-effect></ion-ripple-effect>
         </div>
+    </div>
 
-        <div class="ion-activatable ripple-parent text-center">
-            <ion-icon name="share"></ion-icon>
-            <ion-ripple-effect></ion-ripple-effect>
+
+
+    <div class="toolbar position-absolute"  *ngIf="!hideOptions">
+        <ion-progress-bar type="indeterminate" *ngIf="!imageLoaded"></ion-progress-bar>
+        <div class="d-flex flex-wrap h-100">
+            <div class="ion-activatable ripple-parent text-center" id="open-modal" (click)="getInfo()">
+                <ion-icon name="information-circle-outline"></ion-icon>
+                <ion-ripple-effect></ion-ripple-effect>
+            </div>
+
+            <div class="ion-activatable ripple-parent text-center" (click)="downloadImage()">
+                <ion-icon name="download-outline"></ion-icon>
+                <ion-ripple-effect></ion-ripple-effect>
+            </div>
+            <div class="ion-activatable ripple-parent text-center" *ngIf="true" (click)="confirmDeleteModal.present()">
+                <ion-icon name="trash-outline"></ion-icon>
+                <ion-ripple-effect></ion-ripple-effect>
+            </div>
+
         </div>
-
     </div>
 </div>
 
 
 <ion-modal trigger="open-modal" #imageInfoModal>
     <ng-template>
-        <ion-grid>
+        <ion-header [translucent]="true">
+            <ion-toolbar color="primary">
+                <ion-button slot="start" fill="clear" (click)="closeImageInfoModal()">
+                    <ion-icon class="color-white" name="chevron-back-outline"></ion-icon>
+                </ion-button>
+                <ion-title class="pl-0">
+                    {{imageData?.filename}}
+                </ion-title>
+                <!-- <ion-button slot="end" class="mr-2" (click)="logout()"><ion-icon name="power-outline"></ion-icon></ion-button> -->
+            </ion-toolbar>
+        </ion-header>
+        <ion-grid class="w-100 text-black">
             <ion-row>
                 <ion-col size="6">
                     File Name
                 </ion-col>
                 <ion-col size="6">
-                    q353354_q34q3q343.jpg
+                    {{imageData?.filename}}
                 </ion-col>
             </ion-row>
 
             <ion-row>
                 <ion-col size="6">
-                    Resolution
+                    Size
                 </ion-col>
                 <ion-col size="6">
-                    1920 x 1080
+                    {{(imageData?.size / 1048576) | number: '1.2-2' }} MB
+                </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="imageData?.exif?.exif?.ExifImageHeight">
+                <ion-col size="6">
+                    Resolution (W x H)
+                </ion-col>
+                <ion-col size="6">
+                    {{imageData?.exif?.exif?.ExifImageWidth}} x {{imageData?.exif?.exif?.ExifImageHeight}}
                 </ion-col>
             </ion-row>
             <ion-row>
                 <ion-col size="6">
-                    Location
-                </ion-col>
-                <ion-col size="6" class="text-primary">
-                    Prayagraj, IN <ion-icon name="map"></ion-icon>
-                </ion-col>
-            </ion-row>
-
-            <ion-row>
-                <ion-col size="6">
-                    Time Stamp
+                    Uploaded by
                 </ion-col>
                 <ion-col size="6">
-                    Fri May 27 2022 03:45:31 GMT+0530 (India Standard Time)
-                </ion-col>
-            </ion-row>
-
-
-            <ion-row>
-                <ion-col size="6">
-                    Device
-                </ion-col>
-                <ion-col size="6">
-                    Poco F1
+                    {{imageData?.uploaderName?.fname}} {{imageData?.uploaderName?.lname}}
                 </ion-col>
             </ion-row>
 
             <ion-row>
                 <ion-col size="6">
-                    Focus
+                    Uploaded On
                 </ion-col>
                 <ion-col size="6">
-                    1/3
+                    {{imageData?.uploadedOn | date: 'MMM dd, yyyy'}}
                 </ion-col>
             </ion-row>
 
-            <ion-row>
+            <ion-row *ngIf="imageData?.takenOn">
                 <ion-col size="6">
-                    Aperture
+                    Clicked On
                 </ion-col>
                 <ion-col size="6">
-                    f/2.8
-                </ion-col>
-            </ion-row>
-
-            <ion-row>
-                <ion-col size="6">
-                    Bit Depth
-                </ion-col>
-                <ion-col size="6">
-                    24
+                    {{imageData?.takenOn | date: 'MMM dd, yyyy'}}
                 </ion-col>
             </ion-row>
 
-            <ion-row>
+            <ion-row *ngIf="imageData?.exif?.image">
                 <ion-col size="6">
-                    Shutter Speed
+                    Device & Model
                 </ion-col>
                 <ion-col size="6">
-                    100ms
-                </ion-col>
-            </ion-row>
-
-            <ion-row>
-                <ion-col size="6">
-                    Exposure
-                </ion-col>
-                <ion-col size="6">
-                    Manual
+                    {{imageData?.exif?.image?.Make}} {{imageData?.exif?.image?.Model}}
                 </ion-col>
             </ion-row>
 
-            <ion-row>
+
+            <ion-row *ngFor="let item of exif | keyvalue">
                 <ion-col size="6">
-                    Tags
+                    {{ item.key}}
                 </ion-col>
                 <ion-col size="6">
-                    -
+                    {{item.value}}
                 </ion-col>
             </ion-row>
-
         </ion-grid>
-        <div class="position-absolute modal-close-position w-100 text-center">
-            <ion-fab-button class="modal-close" (click)="closeImageInfoModal()">
-                <ion-icon name="close-circle"></ion-icon>
-            </ion-fab-button>
+        <ion-button class="m-3" (click)="closeImageInfoModal()">
+            Close
+        </ion-button>
+    </ng-template>
+</ion-modal>
+
+<!-- downloading modal -->
+<ion-modal id="downloading-modal" #downloadingModal>
+    <ng-template>
+        <div class="wrapper">
+            <div>
+                <ion-spinner name="crescent"></ion-spinner>
+            </div>
+            <div>Downloading</div>
+        </div>
+    </ng-template>
+</ion-modal>
+
+
+<!-- downloading modal -->
+<ion-modal id="confirm-delete-modal" #confirmDeleteModal>
+    <ng-template>
+        <div class="p-2 text-center">
+            <h3>
+                You sure wanna delete this image?
+            </h3>
+            <ion-button class="w-25" fill="outline" (click)="confirmDeleteModal.dismiss()">No</ion-button>&nbsp;
+            <ion-button class="w-25" (click)="deleteImage(); confirmDeleteModal.dismiss();">Yes</ion-button>
 
         </div>
-
     </ng-template>
 </ion-modal>

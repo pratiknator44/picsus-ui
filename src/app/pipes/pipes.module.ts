@@ -1,14 +1,17 @@
 import { NgModule } from "@angular/core";
+import { AddDomainPipe } from "./domain.pipe";
 import { AccountTypePipe } from "./user.pipes";
 
 @NgModule({
   imports: [
   ],
   exports: [
-    AccountTypePipe
+    AccountTypePipe,
+    AddDomainPipe
   ],
   declarations: [
-    AccountTypePipe
+    AccountTypePipe,
+    AddDomainPipe
   ]
 })
 export class PipesModule {}

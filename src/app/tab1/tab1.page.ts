@@ -4,6 +4,8 @@ import { ToastController } from '@ionic/angular';
 import { APIvars } from '../enums/apivars.enum';
 import { APIService } from '../services/api.service';
 import { StorageService } from '../services/storage.service';
+import { take } from 'rxjs/operators';
+import { PushService } from '../services/push.service';
 
 @Component({
   selector: 'app-tab1',
@@ -15,38 +17,25 @@ export class Tab1Page implements OnInit {
   user;
   dpSrc: String;
   constructor(private _storageService: StorageService,
-    private _activeRoute: ActivatedRoute,
     private _apiService: APIService,
-    private _toastController: ToastController) { }
+    private _toastController: ToastController,
+    private _router: Router,
+    private _pushService: PushService) { }
 
   ngOnInit(): void {
-    this.setUserData();
+    this.refreshUserData();
   }
-
-
-  async setUserData() {
-    this._activeRoute.queryParams.subscribe(qm => {
-      if (qm['refresh']) {
-        this.refreshUserData();
-      } else {
-        this.user = this._storageService.user;
-        console.log(APIvars.domain+'/'+this.user['dp']);
-        this.dpSrc = APIvars.domain+'/'+this.user['dp'];
-      }
-    });
-  }
-
   refreshUserData() {
     this._apiService.getUserInfoFromToken().then(res => {
       this.user = res['user'];
       this._storageService.saveUser(JSON.stringify(this.user));
-      this.dpSrc = APIvars.domain+'/'+this.user['dp'];
+      this.dpSrc = APIvars.domain + '/dp/' + this.user['dp'];
     });
   }
 
   saveName(fname, lname) {
     this._apiService.setName(fname, lname).then(res => {
-      if(res['success']) {
+      if (res['success']) {
         this.refreshUserData();
         // this._router.navigate(['/tabs/tab1'], { queryParams: { refresh: 'all'} });
       } else {
@@ -58,13 +47,20 @@ export class Tab1Page implements OnInit {
           await toast.present();
         }
       }
-    }).catch( async error => {
-      console.log(error);
+    }).catch(async error => {
       const toast = await this._toastController.create({
         message: JSON.stringify(error),
         duration: 3000
       });
       await toast.present();
     });
+  }
+
+
+  logout() {
+    this.user = null;
+    this._storageService.flushAll();
+    this._router.navigate(['/login']);
+    this._pushService.disconnect(); this._pushService.startConnection();
   }
 }

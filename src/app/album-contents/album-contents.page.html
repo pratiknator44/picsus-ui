@@ -1,0 +1,105 @@
+<ion-header [translucent]="true" *ngIf="!showImageMode">
+  <ion-toolbar color="primary" class="large-title-fix">
+    <ion-button fill="clear" slot="start" routerLink="/tabs/tab3">
+      <ion-icon style="color: white;" name="chevron-back-outline"></ion-icon>
+    </ion-button>
+    <ion-title class="pl-0">
+      {{album?.name || 'Album id not found'}}
+    </ion-title>
+
+    <ion-button *ngIf="!deleteMode" fill="clear" slot="end" id="join-album-modal-trigger"
+      (click)="routeToInfo()"><ion-icon style="color: white" name="create-outline"></ion-icon>
+    </ion-button>
+
+    <ion-button color="danger" class="mr-2" *ngIf="deleteMode" slot="end" [disabled]="selectedImages.length===0"
+      (click)="deleteImages()">
+      <ion-icon style="color: white;" name="trash-outline"></ion-icon>
+    </ion-button>
+
+    <ion-button color="secondary" id="open-downloading-dialog" class="mr-2" *ngIf="deleteMode" slot="end" [disabled]="selectedImages.length===0"
+      (click)="shareImage()">
+      <ion-icon name="share-social-outline"></ion-icon>
+    </ion-button>
+
+    <ion-button class="mr-2" slot="end" *ngIf="!deleteMode" (click)="enableDeleteMode()">
+      <ion-icon style="color: white" name="checkmark-done-outline"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <input type="file" multiple accept="image/png, image/jpeg, image/jpg, image/webp" class="d-none"
+    (change)="filesSelected($event)" #imageFilesInput>
+  <ng-container [ngTemplateOutlet]="showImageMode? showImageTemplate : albumContentTemplate"></ng-container>
+</ion-content>
+
+
+<ng-template #albumContentTemplate>
+  <div class="album-info-container">
+    <div class="dp-container w-25 m-2">
+      <img [src]="firstImage | addDomain: 'jpg'" class="circle" />
+    </div>
+
+    <div class="album-info" (click)="routeToInfo()">
+      <h2>{{album?.name}}</h2>
+      <div>{{album?.totalMedia}} Photos | {{album?.totalContributors}} contributors</div>
+      <div class="">Created on {{album?.createdDate | date: 'MMM dd, yyyy'}}</div>
+    </div>
+  </div>
+  <div class="album-photos-container">
+    <ion-label *ngIf="images?.length === 0">This album is empty</ion-label>
+
+
+    <!-- files being uploaded -->
+    <div class="photo-tile upload-in-progress" *ngFor="let uploadingImgSrc of selectedImagesSrc; let x = index"
+      [ngStyle]="{'background-image': 'url('+uploadingImgSrc+')'}">
+      <ion-progress-bar [value]="0.5" type="indeterminate"></ion-progress-bar>
+    </div>
+
+
+    <!-- files already present -->
+    <div class="photo-tile" (longPressed)="activateDeleteMode(image.filename)"
+      (click)="showFullImage(image.filename)" *ngFor="let image of images; let i = index"
+      [ngStyle]="{'background-image': 'url('+('media/_'+image.filename | addDomain: 'jpg')+')'}">
+
+      <!-- ion-long-press [interval]="400" -->
+      <!-- tick icon -->
+      <button class="select circle" *ngIf="deleteMode"><ion-icon color="primary"
+          name="checkmark-circle" *ngIf="selectedImages.includes(image.filename)"></ion-icon></button>
+    </div>
+  </div>
+
+
+
+  <ion-fab *ngIf="!deleteMode" slot="fixed" vertical="bottom" horizontal="end" [edge]="true"
+    style="margin-bottom: 3rem;">
+    <ion-fab-button (click)="imageFilesInput.click()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-fab *ngIf="deleteMode" slot="fixed" vertical="bottom" horizontal="end" [edge]="true"
+    style="margin-bottom: 3rem;">
+    <ion-fab-button (click)="exitDeleteMode()" color="secondary">
+      <ion-icon name="close-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <!-- dp and album name and details-->
+</ng-template>
+
+<ng-template #showImageTemplate>
+  <pi-full-image></pi-full-image>
+</ng-template>
+
+
+<!-- downloading modal -->
+<ion-modal id="downloading-modal" #downloadingModal trigger="open-downloading-dialog">
+  <ng-template>
+    <div class="wrapper">
+        <div>
+          <ion-spinner name="crescent"></ion-spinner>
+        </div>
+        <div>Downloading</div>
+    </div>
+  </ng-template>
+</ion-modal>

@@ -5,15 +5,15 @@ import {
   HttpEvent,
   HttpInterceptor, HttpErrorResponse
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import {tap} from 'rxjs/operators';
 import { APIvars } from '../enums/apivars.enum';
+import { ToastController } from '@ionic/angular';
+import { Observable, tap } from 'rxjs';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
     constructor(
-      private _router: Router) {}
+      private _router: Router, private _toastController: ToastController) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
       request = request.clone({
@@ -23,14 +23,27 @@ export class TokenInterceptor implements HttpInterceptor {
           }
         });
         return next.handle(request).pipe( tap(() => {},
-        err => {
+        async (err) => {
         if (err instanceof HttpErrorResponse) {
           if (err.status === 401) {
             console.log("bad request ", err);
+            const toast = await this._toastController.create({
+              message: '401 bad request'+ JSON.stringify(err),
+              duration: 1500,
+              color: 'danger',
+            })
+            await toast.present();
           }
 
           if(err.status === 500 ) {
             console.log("500 server error ", err);
+            const toast = await this._toastController.create({
+              message: '500 status '+ JSON.stringify(err),
+              duration: 1500,
+              color: 'danger',
+              position: 'top'
+            })
+            await toast.present();
           }
 
           else if (err.status === 404) {

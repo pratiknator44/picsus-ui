@@ -1,9 +1,79 @@
-<ion-content>
-    <button class="start-button circle text-white ion-activatable ripple-parent" #startButton>
-        <h3 class="w-100">START</h3>
-        <ion-ripple-effect type="unbounded"></ion-ripple-effect>
-    </button>
-    <h5 class="text-secondary">Press START</h5>
-    Discovered <span class="text-primary">21 GB</span>
-    <h5 class="">status: ready</h5>
+<ion-header [translucent]="true">
+    <ion-toolbar color="primary">
+        <ion-button fill="clear" slot="start" (click)="goBack()">
+            <ion-icon style="color: white;" name="chevron-back-outline"></ion-icon>
+          </ion-button>
+        <ion-title class="pl-0">
+            Upload to {{albumName}}
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <input type="file" multiple accept="image/png, image/jpeg, image/jpg, image/webp" class="d-none"
+        (change)="filesSelected($event)" #imageFilesInput>
+    <!-- Uploading in album id {{albumName}}<br>
+    <ion-button (click)="imageFilesInput.click()">Select Images</ion-button>
+    <ion-button (click)="uploadImageToServer()">Start upload</ion-button>
+    <input type="file" multiple accept="image/png, image/jpeg, image/jpg, image/webp" class="d-none"
+        (change)="filesSelected($event)" #imageFilesInput>
+
+    <br>
+    <span *ngIf="selectedImagesSrc?.length === 0">No file selected yet</span>
+    <br>
+
+    <h3>Uploading {{promisesCompleted + ' / ' + promises?.length}}</h3>
+    <ion-item *ngFor="let src of selectedImagesSrc; let i = index">
+      <ion-avatar slot="start">
+        <img [alt]="" [src]="src" />
+      </ion-avatar>
+      <ion-label>
+        <span class="float-right">{{uploadProgress[i] ? ((uploadProgress[i] | number: '0.0-0') + '%') : 'Pending'}}</span>
+        <ion-progress-bar [value]="uploadProgress[i]/100" [color]=" uploadProgress[i] === 0 ? 'medium' : 'primary' "></ion-progress-bar><br>
+    </ion-label>
+    </ion-item> -->
+
+
+    <ng-container
+        [ngTemplateOutlet]="selectedFiles?.length > 0 ? uploadTemplate  : uploadButtonTemplate"></ng-container>
+    <ng-template #uploadButtonTemplate>
+        <div class="upload-button-template text-center h-75" (click)="imageFilesInput.click()">
+            <div class="text-light"><ion-icon name="images-outline"></ion-icon></div>
+            <h1 class="text-light">Tap to select and share your images</h1>
+        </div>
+    </ng-template>
+
+
+
+    <ng-template #uploadTemplate>
+        Your images are being uploaded. We'll notify others once they reach us
+        <div class="upload-template d-flex">
+            <!-- (click)="quickPhotoView.present(); selectedImgSrc = src; currentImageIndex = i" -->
+            <div class="image-container position-relative mt-2" id="open-quick-view"
+                *ngFor="let src of selectedImagesSrc; let i = index" [ngStyle]="{'background-image': 'url('+src+')'}">
+                <ion-progress-bar class="position-absolute" [color]="uploadProgress[i] < 1 ? 'primary' : 'success'"
+                    [value]="uploadProgress[i] || 0"></ion-progress-bar>
+            </div>
+        </div>
+    </ng-template>
+
+
+    <!-- <ion-modal #quickPhotoView trigger="open-quick-view" [initialBreakpoint]="0.75">
+        <ng-template>
+            <ion-content>
+                <div class="quick-view-body text-center">
+                    <img [src]="selectedImgSrc" class="quick-view-image" /><br>
+                    upload status: &nbsp;
+                    <span
+                        *ngIf="uploadProgress[currentImageIndex] && uploadProgress[currentImageIndex] < 1">{{uploadProgress[currentImageIndex]
+                        | number:
+                        '0.0-0'}} %</span>
+                    <span *ngIf="uploadProgress[currentImageIndex] >== 1">Complete</span>
+                    <span *ngIf="!uploadProgress[currentImageIndex]"> Pending </span><br>
+                    size: &nbsp; {{((selectedFiles[currentImageIndex]?.size / 1048576) | number: '1.0-1') || 0}} MB
+                    {{uploadProgress[currentImageIndex] | json}}
+                </div>
+            </ion-content>
+        </ng-template>
+    </ion-modal> -->
 </ion-content>

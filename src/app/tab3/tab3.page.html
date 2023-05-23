@@ -3,33 +3,101 @@
     <ion-title>
       Events & Library
     </ion-title>
+    <ion-button slot="end" class="mr-2" id="join-album-modal-trigger">Join</ion-button>
+
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Albums</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <ion-fab id="open-new-lib-modal" slot="fixed" vertical="top" horizontal="end" [edge]="true" (click)="routeToNewGalleryWizard()">
-      <ion-fab-button>
-        <ion-icon name="add"></ion-icon>
-      </ion-fab-button>
+<ion-content [fullscreen]="true" >
+  <ion-progress-bar type="indeterminate" *ngIf="refreshingAlbums"></ion-progress-bar>
+  <ion-fab id="open-new-lib-modal" slot="fixed" vertical="bottom" horizontal="end" [edge]="true"
+    style="margin-bottom: 3rem;" (click)="routeToNewGalleryWizard()">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
   </ion-fab>
-  <!-- <ion-list>
-    <ion-item *ngFor="let library of libraries" class="ion-activatable ripple-parent ">
-      <ion-ripple-effect></ion-ripple-effect>
-      <ion-avatar slot="start">
-        <img [src]="'https://cdn-icons-png.flaticon.com/512/16/16453.png'" alt="avatar" />
-      </ion-avatar>
-      <ion-label>{{ library?.name }} <span class="text-grey">[18MB / 5GB]</span></ion-label>
-    </ion-item>
-  </ion-list> -->
-  {{ albums | json }}
+
+  <br>
   <ion-label *ngIf="albums?.length === 0">No Albums found</ion-label>
-  <pi-album-tile *ngFor="let album of albums" [albumData]="album"></pi-album-tile>
+  <ion-label *ngIf="error">{{error | json}}</ion-label>
+  <a style="text-decoration: none;" *ngFor="let album of albums" ion-long-press [interval]="400"
+    (longPressed)="showModalButton.click(); selectedAlbum = album"
+    (click)="gotoAlbumContents(album)">
+    <pi-album-tile [albumData]="album"></pi-album-tile>
+  </a>
+  
+
+  <button id="open-custom-dialog" class="d-none" #showModalButton></button>
+
+  <!-- options modal -->
+  <ion-modal id="example-modal" #optionsModal trigger="open-custom-dialog">
+    <ng-template>
+      <div class="wrapper">
+        <h1>{{selectedAlbum?.name }}</h1>
+
+        <ion-list lines="none">
+          <ion-item button="true" detail="false" (click)="optionsModal.dismiss(); showConfirmModal.click()">
+            <ion-icon name="person-circle"></ion-icon>
+            <ion-label>Delete (removes all photos)</ion-label>
+          </ion-item>
+          <ion-item button="true" detail="false" (click)="optionsModal.dismiss()">
+            <ion-icon name="person-circle"></ion-icon>
+            <ion-label>Edit Album</ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+    </ng-template>
+  </ion-modal>
+  <button id="open-confirm-delete-dialog" class="d-none" #showConfirmModal></button>
+
+  <!-- confirm delete -->
+  <ion-modal id="confirm-modal" #confirmDeleteModal trigger="open-confirm-delete-dialog">
+    <ng-template>
+      <div class="wrapper m-3">
+        <h1>Delete {{selectedAlbum?.name }}?</h1>
+
+        <div class="text-black">Are you shure you to delete <strong>{{selectedAlbum?.name}}</strong> ?<br> only creator can delete
+          this album</div>
+        <div class="d-flex">
+          <ion-button class="w-50" (click)="confirmDeleteModal.dismiss()">No</ion-button>
+          <ion-button class="w-50" type="danger" (click)="confirmDeleteModal.dismiss(); deleteAlbum()">Yes</ion-button>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
 
 
+  <!-- deleting album -->
+  <ion-backdrop *ngIf="showBackdrop"></ion-backdrop>
+  <div id="box" *ngIf="showBackdrop">
+    <ion-spinner name="crescent"></ion-spinner>
+    <ion-label class="ion-margin-start">Deleting your album, please wait</ion-label>
+  </div>
+
+
+
+  <!-- join album modal -->
+  <ion-modal id="join-album-modal" #joinAlbumModal trigger="join-album-modal-trigger">
+    <ng-template>
+      <div class="wrapper m-3 text-center">
+        <div *ngIf="!joinAlbum.isVerifying && !joinAlbum.confirmJoin">
+
+
+          <div class="text-black">Kindly copy the album link provided to you and click Paste below:</div>
+          <ion-button class="mt-2" (click)="pasteLink(true)" [disabled]="joinAlbum.isVerifying">Paste Link</ion-button>
+        </div>
+        <ion-spinner name="crescent" *ngIf="joinAlbum.isVerifying && !joinAlbum.confirmJoin"></ion-spinner>
+        <div *ngIf="albumAboutToJoin" class="text-black">
+          <div>You're about to join</div>
+          <h2>{{albumAboutToJoin?.name}}</h2>
+          <h5 class="m-0">{{albumAboutToJoin?.createdDate | date: 'MMMM dd, yyyy'}}</h5>
+
+          <ion-button (click)="pasteLink()" [disabled]="joinAlbum.isVerifying">Confirm<ion-spinner
+              name="crescent" *ngIf="joinAlbum.isVerifying"></ion-spinner></ion-button><ion-button fill="outline"
+            (click)="joinAlbumModal.dismiss(); joinAlbum.isVerifying = false; joinAlbum.confirmJoin = false; albumAboutToJoin = null">Cancel</ion-button>
+
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
 </ion-content>

@@ -25,7 +25,6 @@ export class LoginComponent {
 
   async submit() {
     if (this.email.trim().length < 4 || this.password.length < 6) return;
-    console.log(this.mode);
     if (this.mode === 2) {
       console.log (this.password !== this.confirmPassword)
       console.log(this.password+' '+this.confirmPassword);
@@ -49,7 +48,7 @@ export class LoginComponent {
         this.error = new Date().getTime()+JSON.stringify(res);
         if(res['success']) {
           this._storageService.saveTokenAndUser(res['token'], JSON.stringify(res['user']));
-          this._router.navigate(['']);
+          this._router.navigate([''], {queryParams: {refresh: 'true'}});
         }
       }).catch(err => {
         this.error = "error "+JSON.stringify(err);

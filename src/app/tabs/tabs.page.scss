@@ -1,1 +1,6 @@
+::ng-deep {
+        .hide-tabs>ion-tab-bar {
+                display: none !important;
 
+        }
+}

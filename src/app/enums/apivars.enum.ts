@@ -1,5 +1,5 @@
 export enum APIvars {
-  domain = 'http://localhost:3000',  //'http://localhost:3000',
+  domain =  'http://localhost:3000',//'https://little-hill-47053.pktriot.net', //
   APIallowAll = '*',
   generateOTP = 'users/generateOTP',
   confirmotp = 'users/confirmotp',
@@ -9,5 +9,18 @@ export enum APIvars {
   user_info = 'users/info',
   user_changeName = 'users/changeName',
   create_album = 'media/createAlbum',
-  get_albums = 'media/getAlbums'
+  get_albums = 'media/getAlbums',
+  get_album_details = 'media/getAlbumDetailsById',
+  get_album_contents = 'media/albumContents',
+  save_image = 'media/saveimages',
+  delete_album = 'media/deleteAlbum',
+  get_album_info = 'media/getAlbumInfo',
+  update_album_info = 'media/updateInfo',
+  get_album_link = 'media/getLink',
+  get_image_info = 'media/getImageInfo',
+  join_album_via_token = 'media/joinAlbumViaToken',
+  leave_album_by_id = 'media/leaveAlbum',
+  get_user_rooms = 'media/userRooms',
+  delete_images = 'media/deleteImages',
+  has_album_access = 'media/hasAlbumAccess',
 }

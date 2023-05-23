@@ -3,16 +3,19 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { OtpComponent } from './otp/otp.component';
-import { LoggedInGuardService } from './services/loggedIn.service';
+import { LoggedInGuardService } from './services/loggedIn.guard';
 import { TabsPage } from './tabs/tabs.page';
-import { UploadComponent } from './upload/upload.component';
 
 const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule),
     canActivate: [LoggedInGuardService]
-  },{
+  }, {
+    path: 'about',
+    loadChildren:  () => import('./about/about.module').then(m => m.AboutModule)
+  },
+  {
     path: 'login',
     component: LoginComponent
   },
@@ -22,16 +25,13 @@ const routes: Routes = [
   }, {
     path: '',
     component: TabsPage
-  },{
+  }, {
     path: 'not-found',
-    component: NotFoundComponent
-  },{
+    loadChildren:  () => import('./not-found/not-found.module').then(m => m.NotFoundModule)
+  }, {
     path: '**',
-    component: NotFoundComponent
+    loadChildren:  () => import('./not-found/not-found.module').then(m => m.NotFoundModule)
   },
-  // {
-  //   path: 'server-error'
-  // },
 ];
 @NgModule({
   imports: [
@@ -39,4 +39,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

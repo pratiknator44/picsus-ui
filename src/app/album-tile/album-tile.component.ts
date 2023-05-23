@@ -8,6 +8,6 @@ import { IAlbumInterface } from "./album-tile.interface";
 })
 export class AlbumTileComponent {
     @Input() albumData: IAlbumInterface;
-    constructor() { }
+    @Input() isSelected = true;
 
 }

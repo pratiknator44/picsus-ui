@@ -1,19 +1,31 @@
 .tile-container {
-    background-color: steelblue;
-    height: 6rem;
+    background-color: transparent;
+    height: 8rem;
     width: calc(100% - 1rem);
     border-radius: 0.5rem;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 0.25rem;
     display: flex;
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .heading {
-    color: white;
     padding: 1rem;
     padding-bottom: 0;
     font-size: 1.5rem;
+    span {
+        background-color: white;
+        color: black
+    }
+}
+
+.sub-heading {
+    padding-top: 0;
+    font-size: 1rem;
 }
 
 .space-left {
@@ -24,7 +36,6 @@
     font-size: 0.75rem;
 }
 
-.tile-container > div:first-child {
+.tile-container>div:first-child {
     width: 75%;
-    background-color: aqua;
 }

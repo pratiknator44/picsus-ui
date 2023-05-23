@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { APIvars } from '../enums/apivars.enum';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-not-found',
@@ -7,8 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NotFoundComponent implements OnInit {
 
-  constructor() { }
+  imageSrc: string;
+  constructor(private _router: Router) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.imageSrc = APIvars.domain+'/app-images/404.gif'; //http://localhost:3000/app-images/jdev.jpg
+  }
+
+  gotBack() {
+    this._router.navigate(['/tabs/tab3']);
+  }
 
 }

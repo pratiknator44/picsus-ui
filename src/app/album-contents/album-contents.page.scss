@@ -1,0 +1,100 @@
+@import '../../theme/variables.scss';
+
+$width-per-pic: calc(100vw / 3);
+
+.album-info-container {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+
+    .dp-container>img {
+        width: 5rem;
+        height: 5rem;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .album-info {
+        width: 70%;
+
+        h2 {
+            margin-bottom: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        div:last-child {
+            color: grey;
+        }
+    }
+}
+
+.album-photos-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    .photo-tile {
+        height: $width-per-pic;
+        width: $width-per-pic;
+        overflow: hidden;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: relative;
+    }
+
+
+    // .selected-image {
+    //     border: solid 2px #3880ff;
+    // }
+
+    .select {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        border: solid 1px #CCC;
+        height: 2rem; width: 2rem;
+        font-size: 2rem;
+        background: transparent;
+        background-color: white;
+    }
+    .select-inactive {
+        border: solid 1px #CCC;
+        background: transparent;
+    }
+    .select-active {
+        background-color: #3880ff;
+    }
+
+    .upload-in-progress {
+        // filter: grayscale(100%);
+    }
+}
+
+
+
+
+
+.text-grey {
+    color: #666;
+}
+
+
+ion-modal#downloading-modal {
+    --width: fit-content;
+    --min-width: 12rem;
+    --height: fit-content;
+    --border-radius: 6px;
+    --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+}
+
+#downloading-modal {
+    .wrapper {
+        padding: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: inherit;
+    }
+}

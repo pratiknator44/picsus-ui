@@ -3,8 +3,12 @@ export class IAlbumInterface {
     name: string;
     description?: string;
     creator: string;
-    contributors?: any;
+    totalMedia?: string;
+    totalContributors?: any;
+    startDate?: any;
+    endDate?: any;
     createdDate: string;
     isClosed?: boolean;
     days?: number;
+    firstImg?: string;
 }

@@ -1,17 +1,27 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
     <ion-title>
-      Recent Pics
+      Developer Testing (Alpha)
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Galleries</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-button (click)="showNotif()">Register Notification</ion-button>
 
-  <app-explore-container></app-explore-container>
+  <hr>
+
+  <!-- <input type="text" [(ngModel)]="contents" />
+  contents: {{contents | json }} -->
+  id = {{ id }}
+  <br><br>
+  <!-- <ion-button (click)="cache()">Cache</ion-button>
+  <ion-button (click)="data()">Data</ion-button>
+  <ion-button (click)="doc()">Document</ion-button> 
+  <ion-button (click)="lib()">Library</ion-button>
+  <ion-button (click)="ext()">External</ion-button>
+  <ion-button (click)="extStorage()">External Storage</ion-button>
+   -->
+   <ion-button (click)="watchCameraFolder()">Watch Cam Folder</ion-button>
+   <ion-button routerLink="/not-found">Goto 404 Not Found</ion-button>
 </ion-content>

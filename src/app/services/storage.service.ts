@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-
 // provided in root
 @Injectable()
 export class StorageService {
@@ -7,7 +6,6 @@ export class StorageService {
   user;
   constructor() {
     this.user = JSON.parse(localStorage.getItem('user'));
-
   }
 
   saveUser(user) {
@@ -17,5 +15,11 @@ export class StorageService {
   saveTokenAndUser(token, user) {
     localStorage.setItem('user', user);
     localStorage.setItem('authtoken', token);
+  }
+
+  flushAll() {
+    localStorage.clear();
+    sessionStorage.clear();
+    this.user = null;
   }
 }
