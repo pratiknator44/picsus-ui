@@ -1,9 +1,26 @@
 <div class="image-container w-100 w-100 position-relative" style="height: 100vh;">\
 
     <img [src]="('media/_'+photoId) | addDomain : 'jpg'" class="w-100" />
-    <img [src]="('media/'+photoId) | addDomain" class="w-100 position-absolute" (load)="imageLoaded = true" zoom-pan />
+    <img [src]="('media/'+photoId) | addDomain" class="w-100 position-absolute" (load)="imageLoaded = true" zoom-pan
+        (zoomState)="hideOptions = $event" />
 
-    <div class="toolbar position-absolute">
+    <div class="top-left-toolbar position-absolute">
+        <div class="ion-activatable ripple-parent text-center" (click)="goBack()">
+            <ion-icon name="chevron-back-outline"></ion-icon>
+            <ion-ripple-effect></ion-ripple-effect>
+        </div>
+    </div>
+
+    <div class="top-toolbar position-absolute" *ngIf="!hideOptions">
+        <div class="ion-activatable ripple-parent text-center" (click)="share()">
+            <ion-icon name="share-social-outline"></ion-icon>
+            <ion-ripple-effect></ion-ripple-effect>
+        </div>
+    </div>
+
+
+
+    <div class="toolbar position-absolute"  *ngIf="!hideOptions">
         <ion-progress-bar type="indeterminate" *ngIf="!imageLoaded"></ion-progress-bar>
         <div class="d-flex flex-wrap h-100">
             <div class="ion-activatable ripple-parent text-center" id="open-modal" (click)="getInfo()">
@@ -15,15 +32,11 @@
                 <ion-icon name="download-outline"></ion-icon>
                 <ion-ripple-effect></ion-ripple-effect>
             </div>
-            <div class="ion-activatable ripple-parent text-center" *ngIf="false" (click)="deleteImage()">
+            <div class="ion-activatable ripple-parent text-center" *ngIf="true" (click)="confirmDeleteModal.present()">
                 <ion-icon name="trash-outline"></ion-icon>
                 <ion-ripple-effect></ion-ripple-effect>
             </div>
 
-            <div class="ion-activatable ripple-parent text-center" (click)="goBack()">
-                <ion-icon name="chevron-back-outline"></ion-icon>
-                <ion-ripple-effect></ion-ripple-effect>
-            </div>
         </div>
     </div>
 </div>
@@ -118,5 +131,32 @@
         <ion-button class="m-3" (click)="closeImageInfoModal()">
             Close
         </ion-button>
+    </ng-template>
+</ion-modal>
+
+<!-- downloading modal -->
+<ion-modal id="downloading-modal" #downloadingModal>
+    <ng-template>
+        <div class="wrapper">
+            <div>
+                <ion-spinner name="crescent"></ion-spinner>
+            </div>
+            <div>Downloading</div>
+        </div>
+    </ng-template>
+</ion-modal>
+
+
+<!-- downloading modal -->
+<ion-modal id="confirm-delete-modal" #confirmDeleteModal>
+    <ng-template>
+        <div class="p-2 text-center">
+            <h3>
+                You sure wanna delete this image?
+            </h3>
+            <ion-button class="w-25" fill="outline" (click)="confirmDeleteModal.dismiss()">No</ion-button>&nbsp;
+            <ion-button class="w-25" (click)="deleteImage(); confirmDeleteModal.dismiss();">Yes</ion-button>
+
+        </div>
     </ng-template>
 </ion-modal>

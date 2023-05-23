@@ -100,6 +100,10 @@ export class APIService {
     return this._http.get(this.domain+APIvars.get_user_rooms).pipe(take(1));
   }
 
+  hasAlbumAccessForImage(albumId: string, imageId: string) {
+    return this._http.post(this.domain+ APIvars.has_album_access, {albumId, imageId}).toPromise();
+  }
+
   deleteImages(albumId: string, images: string[]) {
     return this._http.post(this.domain+APIvars.delete_images, {albumId, images}).pipe(take(1));
   }

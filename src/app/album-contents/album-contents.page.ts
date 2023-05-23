@@ -1,6 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, Directive, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { take } from 'rxjs/operators';
 import { APIService } from '../services/api.service';
 import { Observable, Subscription } from 'rxjs';
 import { PushService } from '../services/push.service';
@@ -43,8 +42,6 @@ export class AlbumContentsPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log(this._activeRoute.snapshot.params.id);
-
     this.queryParamObservable = this._activeRoute.queryParams.subscribe(async res => {
       this.showImageMode = res['imageId'] ? true : false;
 
@@ -56,7 +53,6 @@ export class AlbumContentsPage implements OnInit, AfterViewInit, OnDestroy {
         this.album = (await this._apiService.getAlbumDetails(this._activeRoute.snapshot.params.id))['album'];
         this.getAllImagesByAlbumId();
       }
-
     });
 
 
@@ -113,7 +109,6 @@ export class AlbumContentsPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   activateDeleteMode(imageId) {
-    console.log(imageId);
     if (!this.deleteMode) {
       this.deleteMode = true;
       this.selectedImages = [imageId];
@@ -157,13 +152,12 @@ export class AlbumContentsPage implements OnInit, AfterViewInit, OnDestroy {
     this.exitDeleteMode();
   }
 
-
-  uploadCompleteForFileIndexOb: Observable<{ uploadCompleteForFileIndex: number }>;
-
   filesSelected(fileEvent: Event) {
     const selectedFilesForUpload = Object.values(fileEvent.target['files']) as File[];
     const len = selectedFilesForUpload.length;
 
+
+    // for current uploading images
     this._mediaUploadService.notifyUploadSubject.asObservable().subscribe(index => {
       this.selectedImagesSrc = this.selectedImagesSrc.slice(index.uploadCompleteForFileIndex + 1);
       this.getAllImagesByAlbumId();

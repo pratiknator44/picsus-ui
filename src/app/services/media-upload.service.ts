@@ -4,11 +4,10 @@ import { IMediaInterface } from "../interfaces/mediaUpload.interface";
 import { HttpEventType, HttpEvent } from '@angular/common/http';
 import { PushService } from "./push.service";
 import { StorageService } from "./storage.service";
-import { Subject, from } from "rxjs";
+import { Observable, Subject, concat, from, of } from "rxjs";
 import { Directory, Filesystem } from "@capacitor/filesystem";
 import { HttpClient } from "@angular/common/http";
 import { APIvars } from "../enums/apivars.enum";
-import { ToastController } from "@ionic/angular";
 import { App } from "@capacitor/app";
 
 @Injectable({
@@ -61,13 +60,12 @@ export class MediaUploadService {
             for (let x = 0; x < len; x++) {
                 uploadQueue.push(this._apiService.saveSingleImage(albumId, selectedFiles[x]));
             }
-
-            from(uploadQueue).subscribe((res: HttpEvent<any>) => {
-
+            concat(...uploadQueue).subscribe((res: HttpEvent<any>) => {
                 if (res.type === HttpEventType.UploadProgress) {
                     console.log("upload progress ", (res.loaded / res.total));
                 }
                 else if (res.type === HttpEventType.Response) {
+                    this.notifyUploadSubject.next({ uploadCompleteForFileIndex: promisesCompleted });
                     ++promisesCompleted;
                 }
             });
@@ -77,9 +75,6 @@ export class MediaUploadService {
             console.log(e);
         }
     }
-
-
-    // 
 
     uploadQueue(albumId, fileQueue: File[]) {
         try {
@@ -104,7 +99,7 @@ export class MediaUploadService {
         });
     }
 
-    async getLocalBinaryOfImage(imageName: string) {
+    async getLocalBinaryOfImage(imageName: string, storage?: Directory) {
 
         const res = await this._http.get(APIvars.domain + '/media/' + imageName, { responseType: 'blob' }).toPromise();
         const b64image = await new Promise((resolve, reject) => {
@@ -126,7 +121,7 @@ export class MediaUploadService {
         //3. get full uri of the saved image
         return Filesystem.getUri({
             path: imageName,
-            directory: Directory.Cache
+            directory: storage ?? Directory.Cache
         });
     }
 

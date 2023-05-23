@@ -1,4 +1,4 @@
-import { Directive, ElementRef } from '@angular/core';
+import { Directive, ElementRef, Output, EventEmitter } from '@angular/core';
 
 declare var Hammer:any;
 
@@ -10,17 +10,20 @@ export class ZoomPanDirective {
 
     public isZoomed: boolean;
 
+    @Output() zoomState = new EventEmitter<boolean>();
+
     constructor(el: ElementRef) {
         this.element = el.nativeElement;
         this.setZoomed(false);
 
         this.hammerIt(this.element);
-
+        this.zoomState = new EventEmitter();
     }
 
     private setZoomed(zoomed:any) {
         this.isZoomed = zoomed;
         this.element.setAttribute('zoomed', this.isZoomed);
+        this.zoomState.emit(this.isZoomed);
     }
 
     private hammerIt(elm:any) {

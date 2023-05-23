@@ -1,13 +1,15 @@
 import { HttpClient } from "@angular/common/http";
 import { Component, Input, OnDestroy, OnInit, AfterViewInit, ViewChild } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { IonModal, ToastController, ViewDidEnter, ViewDidLeave, ViewWillLeave } from "@ionic/angular";
+import { IonModal, ToastController } from "@ionic/angular";
 import { take } from "rxjs/operators";
 import { APIvars } from "../enums/apivars.enum";
 import { Filesystem, Directory } from "@capacitor/filesystem";
 import { APIService } from "../services/api.service";
 import { IImageData } from "./image-data.interface";
 import { DOMService } from "../services/dom.services";
+import { MediaUploadService } from "../services/media-upload.service";
+import { Share } from "@capacitor/share";
 
 @Component({
     selector: 'pi-full-image',
@@ -16,8 +18,10 @@ import { DOMService } from "../services/dom.services";
 })
 export class FullImageComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    @Input() photoId;
     @ViewChild('imageInfoModal') imageInfoModal: IonModal;
+    @ViewChild('downloadingModal') downloadingModal: IonModal;
+
+    photoId: string;
     infoModelOpen: boolean;
     imageLoaded: boolean;
     imageSrc: string;
@@ -25,29 +29,49 @@ export class FullImageComponent implements OnInit, AfterViewInit, OnDestroy {
     file;
     imageData: IImageData;
     exif: any;
+    hideOptions: boolean;   // used in template 
 
     constructor(private _activeRoute: ActivatedRoute,
         private _router: Router,
         private _http: HttpClient,
         private _toastController: ToastController,
         private _apiService: APIService,
-        private _domService: DOMService
+        private _domService: DOMService,
+        private _mediaUploadService: MediaUploadService
     ) {
         this.targetDir = Directory.Data;
 
     }
 
-    ngOnInit(): void {
+    async ngOnInit() {
         this.imageLoaded = false;
         this.imageSrc = null;
+        this._activeRoute.queryParams.pipe(take(1)).subscribe(res => this.photoId = res['imageId']);
+
+
         // http call
         // get image id via url
-        if (!this.photoId) {
-            this._activeRoute.queryParams.pipe(take(1)).subscribe(res => {
-                console.log("in fullimage container ", res);
-                this.photoId = res['imageId'];
-            });
-        }
+
+        // assign photo id only when album access is approved by api
+        // async () => {
+        //     try {
+        //         const photoId = (await this._activeRoute.queryParams.toPromise())['imageId'];
+        //         const userHasAccess = (await this._apiService.hasAlbumAccessForImage(this._activeRoute.snapshot.params.id, photoId))['hasAccess'];
+        //         if (userHasAccess) {
+        //             this.photoId = photoId;
+        //         } else {
+        //             this.hideOptions = false;
+        //         }
+
+        //     } catch (e) {
+        //         (await this._toastController.create({
+        //             message: 'You do not have access to this image',
+        //             duration: 2000,
+        //             position: 'top'
+        //         }))
+        //     }
+        // }
+
     }
 
     ngAfterViewInit(): void {
@@ -57,7 +81,7 @@ export class FullImageComponent implements OnInit, AfterViewInit, OnDestroy {
 
     getPhotoDetails() {
         this._apiService.getImageInfo(this.photoId).subscribe(res => {
-
+            console.log('photo details : ', res);
         });
     }
 
@@ -116,8 +140,37 @@ export class FullImageComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 
-    deleteImage() {
+    async deleteImage() {
+        const albumId = this._activeRoute.snapshot.params.id;
+        console.log(this.photoId, albumId);
 
+        this._apiService.deleteImages(albumId, [this.photoId]).subscribe(res => {
+            this._router.navigate([], { relativeTo: this._activeRoute, queryParams: { imageId: null } });
+        });
+
+    }
+
+    async share() {
+        try {
+            await this.downloadingModal.present();
+
+            const fileUri = (await this._mediaUploadService.getLocalBinaryOfImage(this.photoId, Directory.Documents))['uri'];
+
+            await this.downloadingModal.dismiss();
+
+            Share.share({
+                text: 'Sent with ❤ via Picsus',
+                dialogTitle: "Share via",
+                files: [fileUri],
+            });
+        } catch (e) {
+
+            (await this._toastController.create({
+                message: JSON.stringify(e),
+                color: 'danger',
+                duration: 4000
+            })).present();
+        }
     }
 
     getInfo() {

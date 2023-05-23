@@ -4,7 +4,6 @@ import { IonModal, ToastController, ViewWillEnter } from '@ionic/angular';
 import { APIService } from '../services/api.service';
 import { Clipboard } from '@capacitor/clipboard';
 import { PushService } from '../services/push.service';
-import { PushEventNames } from '../enums/push-events.enum';
 import { DOMService } from '../services/dom.services';
 @Component({
   selector: 'app-tab3',

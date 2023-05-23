@@ -3,7 +3,7 @@
     display: flex;
 }
 
-.image-container > img {
+.image-container>img {
     align-self: center;
 }
 
@@ -17,19 +17,19 @@
     left: 2.5vw;
     cursor: pointer;
 
-    div > div {
+    div>div {
         font-size: 1.5rem;
     }
 }
 
-.toolbar>div > div {
+.toolbar>div>div {
     height: 100%;
     border-radius: 1px black;
     font-size: 2rem;
     width: 33%;
 }
 
-.toolbar>div> div >ion-icon {
+.toolbar>div>div>ion-icon {
     margin-top: 1rem;
     color: white
 }
@@ -45,4 +45,42 @@
 
 .ripple-parent {
     border-color: transparent;
+}
+
+
+ion-modal#downloading-modal, ion-modal#confirm-delete-modal {
+    --width: fit-content;
+    --min-width: 12rem;
+    --height: fit-content;
+    --border-radius: 6px;
+    --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+}
+
+ion-modal#confirm-delete-modal {
+    bottom: -20rem;
+}
+
+
+#downloading-modal {
+    .wrapper {
+        padding: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: inherit;
+    }
+}
+
+
+.top-toolbar {
+    right: 1rem;
+    top: 1rem;
+    color: white;
+    font-size: 2rem;
+}
+
+.top-left-toolbar {
+    left: 1rem;
+    top: 1rem;
+    color: white;
+    font-size: 2rem;
 }

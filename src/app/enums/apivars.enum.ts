@@ -21,5 +21,6 @@ export enum APIvars {
   join_album_via_token = 'media/joinAlbumViaToken',
   leave_album_by_id = 'media/leaveAlbum',
   get_user_rooms = 'media/userRooms',
-  delete_images = 'media/deleteImages'
+  delete_images = 'media/deleteImages',
+  has_album_access = 'media/hasAlbumAccess',
 }
