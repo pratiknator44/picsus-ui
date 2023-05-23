@@ -5,11 +5,10 @@ import {
   HttpEvent,
   HttpInterceptor, HttpErrorResponse
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import {tap} from 'rxjs/operators';
 import { APIvars } from '../enums/apivars.enum';
 import { ToastController } from '@ionic/angular';
+import { Observable, tap } from 'rxjs';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {

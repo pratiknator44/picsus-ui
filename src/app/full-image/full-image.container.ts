@@ -1,8 +1,7 @@
 import { HttpClient } from "@angular/common/http";
-import { Component, Input, OnDestroy, OnInit, AfterViewInit, ViewChild } from "@angular/core";
+import { Component, OnDestroy, OnInit, AfterViewInit, ViewChild } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { IonModal, ToastController } from "@ionic/angular";
-import { take } from "rxjs/operators";
 import { APIvars } from "../enums/apivars.enum";
 import { Filesystem, Directory } from "@capacitor/filesystem";
 import { APIService } from "../services/api.service";
@@ -10,6 +9,7 @@ import { IImageData } from "./image-data.interface";
 import { DOMService } from "../services/dom.services";
 import { MediaUploadService } from "../services/media-upload.service";
 import { Share } from "@capacitor/share";
+import { take } from "rxjs";
 
 @Component({
     selector: 'pi-full-image',

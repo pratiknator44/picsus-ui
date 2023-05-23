@@ -1,12 +1,12 @@
-import { HttpEvent, HttpEventType, HttpProgressEvent } from "@angular/common/http";
-import { Component, Input, OnInit, ViewChild } from "@angular/core";
+import { HttpEvent, HttpEventType } from "@angular/common/http";
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ToastController, ViewWillEnter } from "@ionic/angular";
-import { take } from "rxjs/operators";
 import { APIService } from "../services/api.service";
 import { MediaUploadService } from "../services/media-upload.service";
 import { PushService } from "../services/push.service";
 import { StorageService } from "../services/storage.service";
+import { take } from "rxjs/internal/operators/take";
 
 @Component({
     selector: 'pi-upload',
