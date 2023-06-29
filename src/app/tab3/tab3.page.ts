@@ -5,6 +5,8 @@ import { APIService } from '../services/api.service';
 import { Clipboard } from '@capacitor/clipboard';
 import { PushService } from '../services/push.service';
 import { DOMService } from '../services/dom.services';
+import { Title } from '@angular/platform-browser';
+
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
@@ -32,10 +34,12 @@ export class Tab3Page implements OnInit, ViewWillEnter {
     private _toastController: ToastController,
     private _pushService: PushService,
     private _domService: DOMService,
-    private _activeRoute: ActivatedRoute) { }
+    private _activeRoute: ActivatedRoute,
+    private _title: Title) { }
 
 
   ngOnInit() {
+    this._title.setTitle('Albums | Picsus');
     this.error = null;
     this.getAlbums();
   }

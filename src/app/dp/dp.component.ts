@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController, ToastController } from '@ionic/angular';
+import { LoadingController, ToastController, ViewDidEnter } from '@ionic/angular';
 import { ImageCroppedEvent, LoadedImage } from 'ngx-image-cropper';
 import { APIService } from '../services/api.service';
 
@@ -9,23 +9,25 @@ import { APIService } from '../services/api.service';
   templateUrl: './dp.component.html',
   styleUrls: ['./dp.component.scss'],
 })
-export class DpComponent implements OnInit {
+export class DpComponent implements ViewDidEnter {
 
   imageChangedEvent: any = '';
   croppedImage: any = '';
   flags = { isDisabled: false };
   loader;
+
   constructor(private _loadingController: LoadingController,
     private _toastController: ToastController,
     private _apiService: APIService,
     public router: Router
   ) { }
 
-  ngOnInit() { }
+  ionViewDidEnter(): void {
+
+  }
 
   fileChangeEvent(event: any): void {
     this.imageChangedEvent = event;
-    console.log(event.target.files[0]);
   }
   imageCropped(event: ImageCroppedEvent) {
     this.croppedImage = event.base64;
@@ -36,11 +38,16 @@ export class DpComponent implements OnInit {
   cropperReady() {
     // cropper ready
   }
-  loadImageFailed() {
-    // show message
+  async loadImageFailed() {
+    (await this._toastController.create({
+      message: 'failed to load image',
+      duration: 1500,
+      color: 'danger'
+    })).present()
   }
 
   async cropAndUpload() {
+    if (!this.croppedImage) return;
     this.loader = await this._loadingController.create({
       message: 'Uploading...',
     });
@@ -63,7 +70,7 @@ export class DpComponent implements OnInit {
   }
 
   upload(formData) {
-    this._apiService.uploadDp(formData).then( async res => {
+    this._apiService.uploadDp(formData).then(async res => {
       const toast = await this._toastController.create({
         message: 'Profile picture changed successfully',
         duration: 3000,
@@ -71,7 +78,7 @@ export class DpComponent implements OnInit {
       });
       await toast.present();
 
-      this.router.navigate(['/tabs/tab1'], { queryParams: { refresh: 'all'} });
+      this.router.navigate(['/tabs/tab1'], { queryParams: { refresh: 'all' } });
 
     }).catch(async error => {
       console.log("Error ", error);
@@ -81,7 +88,7 @@ export class DpComponent implements OnInit {
         color: 'danger'
       });
 
-    }).finally( async () => {
+    }).finally(async () => {
       await this._loadingController.dismiss();
     });
   }

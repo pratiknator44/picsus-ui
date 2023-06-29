@@ -76,16 +76,16 @@ export class AlbumContentsPage implements OnInit, AfterViewInit, OnDestroy {
     this._apiService.getAlbumContents(this.album._id).then(res => {
       this.images = res['contents'];
       try {
-        this.firstImage = 'media/_' + this.images[this.images.length - 1]['filename'];
+        this.firstImage = 'media/_' + this.images[this.images.length - 1];
       } catch { this.firstImage = '/app-images/generic.jpg'; }
     }, (e) => {
       this.images = [];
     });
   }
 
-  showFullImage(imageId) {
+  showFullImage(imageId, i) {
     if (!this.deleteMode) {
-      this._router.navigate([], { relativeTo: this._activeRoute, queryParams: { imageId }, queryParamsHandling: 'merge' });
+      this._router.navigate(['/tabs/tab3/viewFullScreen/'+this.album._id], { relativeTo: this._activeRoute, queryParams: { imageId, index: i, album: null }, queryParamsHandling: 'merge' });
     } else {
       this.addRemoveSelection(imageId);
     }
@@ -118,9 +118,10 @@ export class AlbumContentsPage implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  addRemoveSelection(imageId) {
-    const index = this.selectedImages.findIndex(imgName => imgName === imageId);
-    index === -1 ? this.selectedImages.push(imageId) : this.selectedImages.splice(index, 1);
+  addRemoveSelection(filename) {
+    const index = this.selectedImages.findIndex(imgName => imgName === filename);
+    index === -1 ? this.selectedImages.push(filename) : this.selectedImages.splice(index, 1);
+    // console.log(this.selectedImages);
   }
 
   async enableDeleteMode() {
@@ -128,7 +129,7 @@ export class AlbumContentsPage implements OnInit, AfterViewInit, OnDestroy {
     this.selectedImages = [];
 
     (await this._toastCtrl.create({
-      message: 'Select images to delete',
+      message: 'Select images to share or delete',
       duration: 1500,
       position: 'middle'
     })).present();

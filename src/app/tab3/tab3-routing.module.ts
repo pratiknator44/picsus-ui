@@ -6,6 +6,9 @@ const routes: Routes = [
   {
     path: '',
     component: Tab3Page,
+  }, {
+    path: 'viewFullScreen/:albumId',
+    loadChildren: () => import('../media-slide-view/media-slide-view.module').then(m => m.MediaSlideViewModule)
   }
 ];
 

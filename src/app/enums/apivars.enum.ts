@@ -1,5 +1,5 @@
 export enum APIvars {
-  domain =  'http://localhost:3000',//'https://little-hill-47053.pktriot.net', //
+  domain = 'https://sparkling-sea-97571.pktriot.net', // 'http://localhost:3000',//
   APIallowAll = '*',
   generateOTP = 'users/generateOTP',
   confirmotp = 'users/confirmotp',

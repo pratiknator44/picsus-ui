@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Directory, Filesystem } from '@capacitor/filesystem';
 import { ToastController, ViewDidEnter } from '@ionic/angular';
-import { LocalNotifications } from '@capacitor/local-notifications';
 import { PushService } from '../services/push.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -15,6 +14,7 @@ export class Tab2Page implements OnInit, ViewDidEnter {
   id;
   selectedIndex;
   contents;
+  stat;
   fakeData = {
     "files": [
       {
@@ -67,14 +67,33 @@ export class Tab2Page implements OnInit, ViewDidEnter {
       }
     ]
   }
-  constructor(private _toastCtrl: ToastController, private _pushService: PushService, private _activeRoute: ActivatedRoute) {
+  constructor(private _toastCtrl: ToastController,
+    private _pushService: PushService,
+    private _activeRoute: ActivatedRoute) {
   }
 
   async ngOnInit() {
     this.id = this._activeRoute.snapshot.paramMap.get('id');
   }
+
   ionViewDidEnter(): void {
     this.loadContent;
+  }
+  async startDetector() {
+    setInterval(async () => {
+      try {
+        this.stat = await Filesystem.readdir({
+          path: 'Pictures',
+          directory: Directory.ExternalStorage
+        });
+        this.stat.files = this.stat.files.filter(file => !file.isDirectory);
+        this.stat.files.sort( (a,b) => b.ctime - a.ctime);
+        this.stat = this.stat.files[0];
+      } catch (e) {
+        this.stat = "error ", e;
+      }
+    }, 5000);
+    
   }
 
   async loadContent(content: Directory) {
@@ -106,10 +125,10 @@ export class Tab2Page implements OnInit, ViewDidEnter {
       }));
 
     } catch (error) {
-      console.error('error ',error);
+      console.error('error ', error);
       this.contents = 'error', error;
       (await this._toastCtrl.create({
-        message: 'error' +JSON.stringify(error),
+        message: 'error' + JSON.stringify(error),
         duration: 5000
       })).present();
     }

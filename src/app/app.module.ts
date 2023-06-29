@@ -11,13 +11,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { OtpComponent } from './otp/otp.component';
-import { PipesModule } from './pipes/pipes.module';
 import { APIService } from './services/api.service';
 import { CredentailService } from './services/credential.service';
 import { TokenInterceptor } from './services/interceptors';
 import { LoggedInGuardService } from './services/loggedIn.guard';
 import { StorageService } from './services/storage.service';
-// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
     declarations: [AppComponent, LoginComponent, OtpComponent],
     imports: [
@@ -41,7 +39,7 @@ import { StorageService } from './services/storage.service';
             multi: true
         },
         APIService,
-        CredentailService
+        CredentailService,
     ],
     bootstrap: [AppComponent]
 })

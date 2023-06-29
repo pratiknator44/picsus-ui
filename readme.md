@@ -1,7 +1,11 @@
 do
 > npx cap add android
 
+to run in android
+>  ionic build --prod | npx cap copy | npx cap sync | npx cap open android
+
 in android/app/src/main/AndroidMenifest.xml, replace with this content:
+
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.ionic.starter">

@@ -2,19 +2,18 @@ import { Injectable } from "@angular/core";
 import { APIService } from "./api.service";
 import { IMediaInterface } from "../interfaces/mediaUpload.interface";
 import { HttpEventType, HttpEvent } from '@angular/common/http';
-import { PushService } from "./push.service";
-import { StorageService } from "./storage.service";
-import { Observable, Subject, concat, from, of } from "rxjs";
+
+import { Subject, concat } from "rxjs";
 import { Directory, Filesystem } from "@capacitor/filesystem";
 import { HttpClient } from "@angular/common/http";
 import { APIvars } from "../enums/apivars.enum";
 import { App } from "@capacitor/app";
+import { ToastController } from "@ionic/angular";
 
 @Injectable({
     providedIn: 'root'
 })
 export class MediaUploadService {
-
 
     assumedCameraPath = '/storage/emulated/0/DCIM/Camera/'
     contents;
@@ -23,11 +22,42 @@ export class MediaUploadService {
     imageUploadsCompleted = 0;
     notifyUploadSubject: Subject<{ uploadCompleteForFileIndex: number }>;
 
+    newImageDetector: any;
+
+
     constructor(private _apiService: APIService,
-        private _pushService: PushService,
-        private _storageService: StorageService,
-        private _http: HttpClient) {
+        private _http: HttpClient,
+        private _toastCtrl: ToastController) {
         this.notifyUploadSubject = new Subject();
+
+    }
+
+    /**
+     * starts listening to directory changes every 5 seconds.
+     */
+    async startDetector() {
+        this.newImageDetector = setInterval(async () => {
+            try {
+                let imgFiles: any = await Filesystem.readdir({
+                    path: 'Pictures',
+                    directory: Directory.ExternalStorage
+                });
+                imgFiles = imgFiles.files.filter(file => !file.isDirectory);
+                imgFiles.sort((a, b) => b.ctime - a.ctime);
+                imgFiles = imgFiles[0];
+            } catch (e) {
+                this.stopDetector();
+                (await this._toastCtrl.create({
+                    message: 'New image detector stopped working '+ JSON.stringify(e),
+                    duration: 2000,
+                    color: 'danger'
+                })).present();
+            }
+        }, 5000);
+    }
+
+    stopDetector() {
+        clearInterval(this.newImageDetector);
     }
 
     filesSelected(albumId, albumName, fileEvent: Event) {

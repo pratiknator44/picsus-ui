@@ -52,12 +52,15 @@ export class APIService {
   getAlbum() {
     return lastValueFrom(this._http.get(this.domain + APIvars.get_albums));
   }
+  getAlbumFake() {
+    return this._http.get(this.domain + APIvars.get_albums);
+  }
 
   getAlbumDetails(albumId) {
     return lastValueFrom(this._http.post(this.domain + APIvars.get_album_details, {albumId}));
   }
 
-  getAlbumContents(albumId) {
+  getAlbumContents(albumId: string) {
     return lastValueFrom(this._http.post(this.domain + APIvars.get_album_contents, {albumId}));
   }
 
@@ -108,4 +111,5 @@ export class APIService {
   deleteImages(albumId: string, images: string[]) {
     return this._http.post(this.domain+APIvars.delete_images, {albumId, images}).pipe(take(1));
   }
+
 }

@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { ToastController, ViewDidEnter } from '@ionic/angular';
 import { APIvars } from '../enums/apivars.enum';
 import { APIService } from '../services/api.service';
 import { StorageService } from '../services/storage.service';
-import { take } from 'rxjs/operators';
 import { PushService } from '../services/push.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss']
 })
-export class Tab1Page implements OnInit {
+export class Tab1Page implements OnInit, ViewDidEnter {
 
   user;
   dpSrc: String;
@@ -20,11 +20,19 @@ export class Tab1Page implements OnInit {
     private _apiService: APIService,
     private _toastController: ToastController,
     private _router: Router,
-    private _pushService: PushService) { }
+    private _pushService: PushService,
+    private _title: Title) { }
 
-  ngOnInit(): void {
+  ionViewDidEnter(): void {
     this.refreshUserData();
   }
+
+  ngOnInit(): void {
+    this._title.setTitle('Profile | Picsus');
+    this.refreshUserData();
+  }
+
+
   refreshUserData() {
     this._apiService.getUserInfoFromToken().then(res => {
       this.user = res['user'];

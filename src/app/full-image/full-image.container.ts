@@ -10,7 +10,8 @@ import { DOMService } from "../services/dom.services";
 import { MediaUploadService } from "../services/media-upload.service";
 import { Share } from "@capacitor/share";
 import { take } from "rxjs";
-
+import { register } from 'swiper/element/bundle';
+register(); // for swiper js
 @Component({
     selector: 'pi-full-image',
     templateUrl: 'full-image.container.html',

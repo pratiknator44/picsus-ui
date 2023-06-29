@@ -4,8 +4,8 @@ import { RouterModule } from "@angular/router";
 import { IonicModule } from "@ionic/angular";
 import { PipesModule } from "../pipes/pipes.module";
 import { FullImageComponent } from "./full-image.container";
-import { ZoomPanDirective } from "../directives/zoom-pan.directive";
 import { CustomAnimationsDirective } from "../directives/custom-animations.directive";
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 @NgModule({
     imports: [CommonModule, IonicModule, PipesModule, RouterModule.forChild([{
@@ -13,6 +13,7 @@ import { CustomAnimationsDirective } from "../directives/custom-animations.direc
         component: FullImageComponent
     }])],
     exports: [FullImageComponent],
-    declarations: [FullImageComponent, ZoomPanDirective, CustomAnimationsDirective],
+    declarations: [FullImageComponent, CustomAnimationsDirective],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class FullImageModule {}

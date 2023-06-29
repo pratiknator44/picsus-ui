@@ -1,9 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DpComponent } from '../dp/dp.component';
-import { FullImageComponent } from '../full-image/full-image.container';
-import { SettingMenuComponent } from '../settings/settings.component';
-import { UploadComponent } from '../upload/upload.component';
 import { TabsPage } from './tabs.page';
 
 const routes: Routes = [

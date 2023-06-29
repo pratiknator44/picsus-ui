@@ -17,7 +17,7 @@ export class UploadComponent implements OnInit, ViewWillEnter {
 
     albumId;
     albumName;
-    selectedImagesSrc: string[];;
+    selectedImagesSrc: string[];
     selectedFiles: File[];
     uploadProgress = [];
     promises = [];
@@ -64,7 +64,7 @@ export class UploadComponent implements OnInit, ViewWillEnter {
             this.makeImagePreviewSrcOf(this.selectedFiles[x]);
         }
         // this.uploadImageToServer();
-        // this._mediaUploadService.uploadImageToServer(this.albumId, this.albumName, this.selectedFiles);
+        this._mediaUploadService.uploadImageToServer(this.albumId,  this.selectedFiles);
     }
 
     makeImagePreviewSrcOf(file: File) {

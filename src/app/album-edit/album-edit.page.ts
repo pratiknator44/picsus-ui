@@ -52,7 +52,7 @@ export class AlbumEditComponent {
         this.isInfoLoading = true;
         this._apiService.getAlbumInfo(albumId).subscribe(res => {
             this.album = res['album'];
-            this.isCreator = this._storageService.user._id === this.album.creator;
+            this.isCreator = JSON.parse(localStorage.getItem('user'))?._id === this.album.creator;
 
             this.creator = res['contributorsData'][0] ?? null;
             this.contributors = res['contributorsData'] ?? [];

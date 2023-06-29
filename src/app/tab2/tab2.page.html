@@ -22,6 +22,10 @@
   <ion-button (click)="ext()">External</ion-button>
   <ion-button (click)="extStorage()">External Storage</ion-button>
    -->
-   <ion-button (click)="watchCameraFolder()">Watch Cam Folder</ion-button>
-   <ion-button routerLink="/not-found">Goto 404 Not Found</ion-button>
+  <ion-button (click)="startDetector()"> Start Detecting ExtStorage</ion-button>
+  <br>
+  stat = {{ stat | json }}
+   <br>
+  <ion-button (click)="watchCameraFolder()">Watch Cam Folder</ion-button>
+  <ion-button routerLink="/not-found">Goto 404 Not Found</ion-button>
 </ion-content>

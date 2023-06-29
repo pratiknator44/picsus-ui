@@ -1,51 +1,50 @@
-<div class="image-container w-100 w-100 position-relative" style="height: 100vh;">\
+<swiper-container class="swiper-container w-100 h-100" [allowSlideNext]="!hideOptions" [allowSlidePrev]="!hideOptions"
+    [initialSlide]="currentSlideIndex || 0" (slidechange)="setCurrentSlideDetails($event)" #swiperRef>
+    <swiper-slide class="swiper-slide" *ngFor="let img of images; let i = index">
+        <!-- Slide {{i}} -->
+        <div class="w-100 h-100 d-flex image-container"
+            [ngStyle]="{'background-image': 'url('+('media/_'+img | addDomain: 'jpg')+')'}">
 
-    <img [src]="('media/_'+photoId) | addDomain : 'jpg'" class="w-100" />
-    <img [src]="('media/'+photoId) | addDomain" class="w-100 position-absolute" (load)="imageLoaded = true" />
-
-    <div class="top-left-toolbar position-absolute">
-        <div class="ion-activatable ripple-parent text-center" (click)="goBack()">
-            <ion-icon name="chevron-back-outline"></ion-icon>
-            <ion-ripple-effect></ion-ripple-effect>
+            <img [src]="('media/'+img) | addDomain" (load)="imageLoaded = true" class="thumb-img" zoom-pan
+            (zoomState)="hideOptions = $event" loading="lazy" />
         </div>
+    </swiper-slide>
+</swiper-container>
+
+
+<div class="toolbar upper-toolbar d-flex" *ngIf="!hideOptions">
+    <div class="toolbar-option text-center ion-activatable ripple-parent" (click)="goBack()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+        <ion-ripple-effect></ion-ripple-effect>
     </div>
-
-    <div class="top-toolbar position-absolute" *ngIf="!hideOptions">
-        <div class="ion-activatable ripple-parent text-center" (click)="share()">
-            <ion-icon name="share-social-outline"></ion-icon>
-            <ion-ripple-effect></ion-ripple-effect>
-        </div>
+    <div class="toolbar-option text-center ion-activatable ripple-parent" (click)="share(); downloadingModal.present()">
+        <ion-icon name="share-social-outline"></ion-icon>
+        <ion-ripple-effect></ion-ripple-effect>
     </div>
+</div>
 
-
-
-    <div class="toolbar position-absolute"  *ngIf="!hideOptions">
-        <ion-progress-bar type="indeterminate" *ngIf="!imageLoaded"></ion-progress-bar>
-        <div class="d-flex flex-wrap h-100">
-            <div class="ion-activatable ripple-parent text-center" id="open-modal" (click)="getInfo()">
-                <ion-icon name="information-circle-outline"></ion-icon>
-                <ion-ripple-effect></ion-ripple-effect>
-            </div>
-
-            <div class="ion-activatable ripple-parent text-center" (click)="downloadImage()">
-                <ion-icon name="download-outline"></ion-icon>
-                <ion-ripple-effect></ion-ripple-effect>
-            </div>
-            <div class="ion-activatable ripple-parent text-center" *ngIf="true" (click)="confirmDeleteModal.present()">
-                <ion-icon name="trash-outline"></ion-icon>
-                <ion-ripple-effect></ion-ripple-effect>
-            </div>
-
-        </div>
+<div class="toolbar lower-toolbar d-flex" *ngIf="!hideOptions">
+    <div class="toolbar-option text-center ion-activatable ripple-parent" (click)="getInfo(); imageInfoModal.present()">
+        <ion-icon name="information-circle-outline"></ion-icon>
+        <ion-ripple-effect></ion-ripple-effect>
+    </div>
+    <div class="toolbar-option text-center ion-activatable ripple-parent" (click)="downloadImage()">
+        <ion-icon name="download-outline"></ion-icon>
+        <ion-ripple-effect></ion-ripple-effect>
+    </div>
+    <div class="toolbar-option text-center ion-activatable ripple-parent" (click)="confirmDeleteModal.present()">
+        <ion-icon name="trash-outline"></ion-icon>
+        <ion-ripple-effect></ion-ripple-effect>
     </div>
 </div>
 
 
-<ion-modal trigger="open-modal" #imageInfoModal>
+<!-- exif data modal -->
+<ion-modal #imageInfoModal>
     <ng-template>
         <ion-header [translucent]="true">
             <ion-toolbar color="primary">
-                <ion-button slot="start" fill="clear" (click)="closeImageInfoModal()">
+                <ion-button slot="start" fill="clear" (click)="imageInfoModal.dismiss()">
                     <ion-icon class="color-white" name="chevron-back-outline"></ion-icon>
                 </ion-button>
                 <ion-title class="pl-0">
@@ -127,11 +126,13 @@
                 </ion-col>
             </ion-row>
         </ion-grid>
-        <ion-button class="m-3" (click)="closeImageInfoModal()">
+        <ion-button class="m-3" (click)="imageInfoModal.dismiss()">
             Close
         </ion-button>
     </ng-template>
 </ion-modal>
+<!-- exif modal data ends -->
+
 
 <!-- downloading modal -->
 <ion-modal id="downloading-modal" #downloadingModal>
@@ -145,8 +146,7 @@
     </ng-template>
 </ion-modal>
 
-
-<!-- downloading modal -->
+<!-- confirm delete modal -->
 <ion-modal id="confirm-delete-modal" #confirmDeleteModal>
     <ng-template>
         <div class="p-2 text-center">

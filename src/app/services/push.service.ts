@@ -112,7 +112,7 @@ export class PushService {
         this._socket.emit(PushEventNames.LEAVE_ALBUM, { albumId, albumName, senderName: this.userName });
     }
 
-    async showLocalNotification(title: string, body = '') {
+    async showLocalNotification(title: string, body = '', url?: string) {
         const id =  Math.ceil(Math.random() * 1000);
         await LocalNotifications.schedule({
             notifications: [
@@ -120,14 +120,15 @@ export class PushService {
                     title,
                     body,
                     id,
+                    
                     schedule: { at: new Date(Date.now() + 1000 * 5) },
                     sound: null,
                     attachments: [{
                         id: id.toString(),
-                        url: '/#/tabs/tab2'
+                        url: url || '/#/tabs/tab2'
                     }],
                     actionTypeId: "",
-                    extra: null
+                    extra: null,
                 }
             ]
         });
